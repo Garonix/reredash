@@ -209,6 +209,7 @@ class Prometheus(BaseQueryRunner):
             query = "query={}".format(query) if not query.startswith("query=") else query
 
             payload = parse_qs(query)
+            # Determine initial query type based on 'step' parameter for API endpoint selection
             query_type = "query_range" if "step" in payload.keys() else "query"
 
             # for the range of until now
@@ -230,7 +231,20 @@ class Prometheus(BaseQueryRunner):
             if len(metrics) == 0:
                 return None, "query result is empty."
 
-            metric_labels = metrics[0]["metric"].keys()
+            # Determine how to parse rows based on the structure of the first metric result
+            first_metric = metrics[0]
+            if "values" in first_metric:
+                # Result contains time series data ("values")
+                rows = get_range_rows(metrics)
+            elif "value" in first_metric:
+                # Result contains single point data ("value")
+                rows = get_instant_rows(metrics)
+            else:
+                # Handle unexpected result format if necessary
+                return None, "Unknown Prometheus result format encountered."
+
+            # Extract labels from the first metric
+            metric_labels = first_metric.get("metric", {}).keys()
 
             for label_name in metric_labels:
                 columns.append(
@@ -240,11 +254,6 @@ class Prometheus(BaseQueryRunner):
                         "name": label_name,
                     }
                 )
-
-            if query_type == "query_range":
-                rows = get_range_rows(metrics)
-            else:
-                rows = get_instant_rows(metrics)
 
             data = {"rows": rows, "columns": columns}
 
