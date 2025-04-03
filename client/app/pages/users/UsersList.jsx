@@ -75,17 +75,17 @@ class UsersList extends React.Component {
     {
       key: "active",
       href: "users",
-      title: "Active Users",
+      title: "活跃用户",
     },
     {
       key: "pending",
       href: "users/pending",
-      title: "Pending Invitations",
+      title: "待处理邀请",
     },
     {
       key: "disabled",
       href: "users/disabled",
-      title: "Disabled Users",
+      title: "已禁用用户",
       isAvailable: () => policy.canCreateUser(),
     },
   ];

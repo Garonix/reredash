@@ -110,7 +110,7 @@ function EmptyState({
           show={isAvailable.dataSource}
           completed={isCompleted.dataSource}
           url="data_sources/new"
-          urlText="Connect a Data Source"
+          urlText="连接一个数据源"
         />
       );
     }
@@ -120,7 +120,7 @@ function EmptyState({
         key="dataSources"
         show={isAvailable.dataSource}
         completed={isCompleted.dataSource}
-        text="Ask an account admin to connect a data source"
+        text="联系你的管理员连接一个数据源"
       />
     );
   };
@@ -138,7 +138,7 @@ function EmptyState({
           show={isAvailable.query}
           completed={isCompleted.query}
           url="queries/new"
-          urlText="Create your first Query"
+          urlText="创建你的第一个查询"
         />
       ),
     },
@@ -150,7 +150,7 @@ function EmptyState({
           show={isAvailable.alert}
           completed={isCompleted.alert}
           url="alerts/new"
-          urlText="Create your first Alert"
+          urlText="创建你的第一个告警"
         />
       ),
     },
@@ -162,7 +162,7 @@ function EmptyState({
           show={isAvailable.dashboard}
           completed={isCompleted.dashboard}
           onClick={showCreateDashboardDialog}
-          urlText="Create your first Dashboard"
+          urlText="创建你的第一个看板"
         />
       ),
     },
@@ -174,7 +174,7 @@ function EmptyState({
           show={isAvailable.inviteUsers}
           completed={isCompleted.inviteUsers}
           url="users/new"
-          urlText="Invite your team members"
+          urlText="邀请你的团队成员"
         />
       ),
     },
@@ -195,7 +195,7 @@ function EmptyState({
           <img src={imageSource} alt={illustration + " Illustration"} width="75%" />
         </div>
         <div className="empty-state__steps">
-          <h4>Let&apos;s get started</h4>
+          <h4>让我们开始吧</h4>
           <ol>{stepsItems.map((item) => item.node)}</ol>
           {helpMessage}
         </div>

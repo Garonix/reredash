@@ -25,23 +25,24 @@ import DashboardListEmptyState from "./components/DashboardListEmptyState";
 
 import "./dashboard-list.css";
 
+// dashboards 列表页面的侧边栏
 const sidebarMenu = [
   {
     key: "all",
     href: "dashboards",
-    title: "All Dashboards",
+    title: "所有看板",
     icon: () => <Sidebar.MenuIcon icon="zmdi zmdi-view-quilt" />,
   },
   {
     key: "my",
     href: "dashboards/my",
-    title: "My Dashboards",
+    title: "我的看板",
     icon: () => <Sidebar.ProfileImage user={currentUser} />,
   },
   {
     key: "favorites",
     href: "dashboards/favorites",
-    title: "Favorites",
+    title: "收藏的看板",
     icon: () => <Sidebar.MenuIcon icon="fa fa-star" />,
   },
 ];

@@ -1,7 +1,7 @@
-@backgroundColor: #001529;
+@backgroundColor: rgb(0, 110, 178);
 @dividerColor: rgba(255, 255, 255, 0.5);
 @textColor: rgba(255, 255, 255, 0.75);
-@brandColor: #ff7964; // Redash logo color
+@brandColor: #71ff64; // Redash logo color
 @activeItemColor: @brandColor;
 @iconSize: 26px;
 
@@ -31,10 +31,19 @@
   .help-trigger {
     font: inherit;
   }
-
+  .ant-menu.ant-menu-dark {
+    background: @backgroundColor;
+  }
   .ant-menu {
     .ant-menu-item,
+    // .ant-menu-dark {
+    //   background: @backgroundColor;
+    // }
+    // .ant-menu-sub {
+    //   background: @backgroundColor;
+    // }
     .ant-menu-submenu {
+      background: @backgroundColor;
       font-weight: 500;
       color: @textColor;
 
