@@ -1,7 +1,7 @@
 import os
 import time
 from base64 import b64decode
-from datetime import datetime
+from datetime import datetime, timedelta
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qs
 
@@ -17,6 +17,11 @@ from redash.query_runner import (
 
 
 def get_instant_rows(metrics_data):
+    """
+    处理即时查询结果，将数据转换为行数据
+    :param metrics_data: Prometheus API 返回的 metrics 数据
+    :return: 行数据列表
+    """
     rows = []
 
     for metric in metrics_data:
@@ -31,6 +36,11 @@ def get_instant_rows(metrics_data):
 
 
 def get_range_rows(metrics_data):
+    """
+    处理范围查询结果，将数据转换为行数据
+    :param metrics_data: Prometheus API 返回的 metrics 数据
+    :return: 行数据列表
+    """
     rows = []
 
     for metric in metrics_data:
@@ -50,6 +60,11 @@ def get_range_rows(metrics_data):
 
 # Convert datetime string to timestamp
 def convert_query_range(payload):
+    """
+    转换查询参数中的时间范围，将 datetime 字符串转换为时间戳
+    :param payload: 查询参数
+    :return: None
+    """
     query_range = {}
 
     for key in ["start", "end"]:
@@ -76,9 +91,17 @@ class Prometheus(BaseQueryRunner):
     should_annotate_query = False
 
     def _get_datetime_now(self):
+        """
+        获取当前时间
+        :return: 当前时间
+        """
         return datetime.now()
 
     def _get_prometheus_kwargs(self):
+        """
+        获取 Prometheus 连接参数
+        :return: Prometheus 连接参数
+        """
         ca_cert_file = self._create_cert_file("ca_cert_File")
         if ca_cert_file is not None:
             verify = ca_cert_file
@@ -98,6 +121,11 @@ class Prometheus(BaseQueryRunner):
         }
 
     def _create_cert_file(self, key):
+        """
+        创建证书文件
+        :param key: 证书配置 key
+        :return: 证书文件名
+        """
         cert_file_name = None
 
         if self.configuration.get(key, None) is not None:
@@ -109,6 +137,11 @@ class Prometheus(BaseQueryRunner):
         return cert_file_name
 
     def _cleanup_cert_files(self, promehteus_kwargs):
+        """
+        清理证书文件
+        :param promehteus_kwargs: Prometheus 连接参数
+        :return: None
+        """
         verify = promehteus_kwargs.get("verify", True)
         if isinstance(verify, str) and os.path.exists(verify):
             os.remove(verify)
@@ -120,6 +153,10 @@ class Prometheus(BaseQueryRunner):
 
     @classmethod
     def configuration_schema(cls):
+        """
+        配置 schema
+        :return: 配置 schema
+        """
         # files has to end with "File" in name
         return {
             "type": "object",
@@ -140,6 +177,10 @@ class Prometheus(BaseQueryRunner):
         }
 
     def test_connection(self):
+        """
+        测试连接
+        :return: 连接结果
+        """
         result = False
         promehteus_kwargs = {}
         try:
@@ -154,6 +195,11 @@ class Prometheus(BaseQueryRunner):
         return result
 
     def get_schema(self, get_stats=False):
+        """
+        获取 schema
+        :param get_stats: 是否获取统计信息
+        :return: schema
+        """
         schema = []
         promehteus_kwargs = {}
         try:
@@ -179,6 +225,12 @@ class Prometheus(BaseQueryRunner):
 
     def run_query(self, query, user):
         """
+        运行查询
+        :param query: 查询语句
+        :param user: 用户信息
+        :return: 查询结果
+        """
+        """
         Query Syntax, actually it is the URL query string.
         Check the Prometheus HTTP API for the details of the supported query string.
 
@@ -201,21 +253,33 @@ class Prometheus(BaseQueryRunner):
             {"friendly_name": "value", "type": TYPE_STRING, "name": "value"},
         ]
         promehteus_kwargs = {}
-
+        print("DEBUG: run_query called")
         try:
             error = None
-            query = query.strip()
+            query = "up"
             # for backward compatibility
             query = "query={}".format(query) if not query.startswith("query=") else query
 
             payload = parse_qs(query)
             # Determine initial query type based on 'step' parameter for API endpoint selection
-            query_type = "query_range" if "step" in payload.keys() else "query"
+            # query_type = "query_range" if "step" in payload.keys() else "query"
 
-            # for the range of until now
+            # 强制使用query_range
+            query_type = "query_range"
+            print("DEBUG: run_query called")
+            # 如果没有start,则使用当前时间前10分钟作为start
+            if query_type == "query_range" and "start" not in payload.keys():
+                date_now = self._get_datetime_now()
+                payload.update({"start": [date_now - timedelta(minutes=10)]})
+
+            # 如果没有end,则使用当前时间作为end
             if query_type == "query_range" and ("end" not in payload.keys() or "now" in payload["end"]):
                 date_now = self._get_datetime_now()
                 payload.update({"end": [date_now]})
+            
+            # 如果没有step,则使用1分钟作为step
+            if query_type == "query_range" and "step" not in payload.keys():
+                payload.update({"step": ["1m"]})
 
             convert_query_range(payload)
 
@@ -229,7 +293,7 @@ class Prometheus(BaseQueryRunner):
             metrics = response.json()["data"]["result"]
 
             if len(metrics) == 0:
-                return None, "query result is empty."
+                return None, "查询结果为空."
 
             # Determine how to parse rows based on the structure of the first metric result
             first_metric = metrics[0]
