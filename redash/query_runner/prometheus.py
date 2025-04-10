@@ -256,7 +256,6 @@ class Prometheus(BaseQueryRunner):
         print("DEBUG: run_query called")
         try:
             error = None
-            query = "up"
             # for backward compatibility
             query = "query={}".format(query) if not query.startswith("query=") else query
 
@@ -266,20 +265,19 @@ class Prometheus(BaseQueryRunner):
 
             # 强制使用query_range
             query_type = "query_range"
-            print("DEBUG: run_query called")
-            # 如果没有start,则使用当前时间前10分钟作为start
+            # 如果没有start,则使用当前时间前1小时作为start
             if query_type == "query_range" and "start" not in payload.keys():
                 date_now = self._get_datetime_now()
-                payload.update({"start": [date_now - timedelta(minutes=10)]})
+                payload.update({"start": [date_now - timedelta(hours=1)]})
 
             # 如果没有end,则使用当前时间作为end
             if query_type == "query_range" and ("end" not in payload.keys() or "now" in payload["end"]):
                 date_now = self._get_datetime_now()
                 payload.update({"end": [date_now]})
             
-            # 如果没有step,则使用1分钟作为step
+            # 如果没有step,则使用5分钟作为step
             if query_type == "query_range" and "step" not in payload.keys():
-                payload.update({"step": ["1m"]})
+                payload.update({"step": ["5m"]})
 
             convert_query_range(payload)
 
