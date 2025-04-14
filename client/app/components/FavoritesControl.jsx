@@ -28,7 +28,7 @@ export default class FavoritesControl extends React.Component {
   render() {
     const { item, onChange } = this.props;
     const icon = item.is_favorite ? "fa fa-star" : "fa fa-star-o";
-    const title = item.is_favorite ? "Remove from favorites" : "Add to favorites";
+    const title = item.is_favorite ? "从收藏中移除" : "添加到收藏";
     return (
       <PlainButton
         title={title}

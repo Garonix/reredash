@@ -24,7 +24,7 @@ export default function DashboardListEmptyState({ page, searchTerm, selectedTags
   }
   switch (page) {
     case "favorites":
-      return <BigMessage message="Mark dashboards as Favorite to list them here." icon="fa-star" />;
+      return <BigMessage message="收藏看板，随后在这里显示" icon="fa-star" />;
     case "my":
       const my_msg = currentUser.hasPermission("create_dashboard") ? (
         <span>

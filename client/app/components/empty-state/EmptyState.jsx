@@ -6,7 +6,6 @@ import CloseOutlinedIcon from "@ant-design/icons/CloseOutlined";
 import Link from "@/components/Link";
 import PlainButton from "@/components/PlainButton";
 import CreateDashboardDialog from "@/components/dashboards/CreateDashboardDialog";
-import HelpTrigger from "@/components/HelpTrigger";
 import { currentUser } from "@/services/auth";
 import organizationStatus from "@/services/organizationStatus";
 
@@ -46,12 +45,7 @@ Step.defaultProps = {
 
 export function EmptyStateHelpMessage({ helpTriggerType }) {
   return (
-    <p>
-      Need more support?{" "}
-      <HelpTrigger className="f-14" type={helpTriggerType} showTooltip={false}>
-        See our Help
-      </HelpTrigger>
-    </p>
+    <p></p>
   );
 }
 

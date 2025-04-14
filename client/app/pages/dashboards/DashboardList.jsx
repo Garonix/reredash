@@ -189,7 +189,7 @@ routes.register(
   "Dashboards.Favorites",
   routeWithUserSession({
     path: "/dashboards/favorites",
-    title: "Favorite Dashboards",
+    title: "收藏的看板",
     render: pageProps => <DashboardListPage {...pageProps} currentPage="favorites" />,
   })
 );
@@ -197,7 +197,7 @@ routes.register(
   "Dashboards.My",
   routeWithUserSession({
     path: "/dashboards/my",
-    title: "My Dashboards",
+    title: "我的看板",
     render: pageProps => <DashboardListPage {...pageProps} currentPage="my" />,
   })
 );

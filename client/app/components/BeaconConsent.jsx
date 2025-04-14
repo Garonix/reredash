@@ -12,7 +12,9 @@ const Text = Typography.Text;
 
 function BeaconConsent() {
   const [hide, setHide] = useState(false);
-
+  // 隐藏底部信息
+  clientConfig.showBeaconConsentMessage = false;
+  
   if (!clientConfig.showBeaconConsentMessage || hide) {
     return null;
   }

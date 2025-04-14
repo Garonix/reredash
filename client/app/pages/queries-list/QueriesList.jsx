@@ -214,7 +214,7 @@ routes.register(
   "Queries.Favorites",
   routeWithUserSession({
     path: "/queries/favorites",
-    title: "Favorite Queries",
+    title: "收藏的查询",
     render: pageProps => <QueriesListPage {...pageProps} currentPage="favorites" />,
   })
 );
@@ -222,7 +222,7 @@ routes.register(
   "Queries.Archived",
   routeWithUserSession({
     path: "/queries/archive",
-    title: "Archived Queries",
+    title: "归档的查询",
     render: pageProps => <QueriesListPage {...pageProps} currentPage="archive" />,
   })
 );
@@ -230,7 +230,7 @@ routes.register(
   "Queries.My",
   routeWithUserSession({
     path: "/queries/my",
-    title: "My Queries",
+    title: "我的查询",
     render: pageProps => <QueriesListPage {...pageProps} currentPage="my" />,
   })
 );

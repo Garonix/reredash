@@ -263,6 +263,3 @@ registerComponent("HelpTrigger", helpTriggerWithTypes(TYPES, [DOMAIN]));
 export default function HelpTrigger(props) {
   return <DynamicComponent {...props} name="HelpTrigger" />;
 }
-
-HelpTrigger.propTypes = HelpTriggerPropTypes;
-HelpTrigger.defaultProps = HelpTriggerDefaultProps;
