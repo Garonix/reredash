@@ -58,7 +58,7 @@
       // 文字样式
       .desktop-navbar-label {
         margin-top: 0; // 去除上边距
-        font-size: 15px; // 设置字体大小
+        font-size: 14px; // 设置字体大小
       }
       
       // 活动项样式
@@ -84,15 +84,19 @@
       a, span, .anticon {
         color: inherit; // 链接、文字、图标颜色继承
       }
-      
+
+      &.ant-menu-submenu-horizontal {
+        width: 86px; // 固定宽度
+        .ant-menu-submenu-title {
+          width: 56px;
+          display: inline-flex; // 使用flex布局
+          flex-direction: row; // 水平排列
+          justify-content: center; // 水平居中
+          align-items: center; // 垂直居中
+        }
+      }
     }
 
-    // 调整新建按钮位置
-    .ant-menu-submenu[data-test="CreateButton"] {
-      margin-left: 30px;
-      position: absolute;
-      left: 100px;
-    }
   }
 
   // 个人中心菜单样式
