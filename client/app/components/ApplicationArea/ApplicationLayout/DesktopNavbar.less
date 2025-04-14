@@ -1,179 +1,205 @@
-@backgroundColor: rgb(0, 110, 178);
-@dividerColor: rgba(255, 255, 255, 0.5);
-@textColor: rgba(255, 255, 255, 0.75);
-@brandColor: #71ff64; // Redash logo color
-@activeItemColor: @brandColor;
-@iconSize: 26px;
+@backgroundColor: rgb(0, 110, 178); // 导航栏背景色(RGB格式)
+@dividerColor: rgba(255, 255, 255, 0.5); // 分隔线颜色(半透明白色)
+@textColor: rgba(255, 255, 255, 0.75); // 默认文字颜色(半透明白色)
+@brandColor: #ffffff; // 品牌主色(绿色)
+@activeItemColor: @brandColor; // 活动项颜色(继承品牌色)
+@iconSize: 20px; // 图标大小(20像素)
+@navbarHeight: 60px; // 导航栏高度(60像素)
 
+// 导航栏主容器样式
 .desktop-navbar {
-  background: @backgroundColor;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 80px;
-  overflow: hidden;
+  background: @backgroundColor; // 设置背景颜色
+  display: flex; // 使用flex布局
+  flex-direction: row; // 水平排列
+  height: @navbarHeight; // 固定高度
+  width: 100%; // 宽度100%
+  align-items: center; // 垂直居中
+  padding: 0 20px; // 左右内边距20px
+  z-index: 1000; // 确保在最上层
 
-  &-spacer {
-    flex: 1 1 auto;
-  }
-
-  &-logo.ant-menu {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    text-align: center;
-
+  // Logo区域样式
+  &-logo {
+    margin-right: 30px; // 右侧外边距30px
+    // Logo图片样式
     img {
-      height: 40px;
-      transition: all 270ms;
+      height: 30px; // 设置高度30px
     }
   }
-
-  .help-trigger {
-    font: inherit;
-  }
-  .ant-menu.ant-menu-dark {
-    background: @backgroundColor;
-  }
+  
+  // 导航菜单样式
   .ant-menu {
+    display: flex;
+    justify-content: center; // 水平居中
+    width: 100%; // 占满宽度
+    flex-direction: row; // 水平排列
+    background: @backgroundColor !important; // 背景颜色与导航栏背景色一致
+    line-height: @navbarHeight; // 行高与导航栏高度一致
+    border: none; // 去除边框
+
+    // 导航菜单项样式
     .ant-menu-item,
-    // .ant-menu-dark {
-    //   background: @backgroundColor;
-    // }
-    // .ant-menu-sub {
-    //   background: @backgroundColor;
-    // }
     .ant-menu-submenu {
-      background: @backgroundColor;
-      font-weight: 500;
-      color: @textColor;
+      display: inline-flex;
+      margin: 0 10px; // 增加水平间距
+      flex-direction: row; // 水平排列
+      align-items: center; // 垂直居中
+      height: @navbarHeight; // 高度与导航栏高度一致
+      padding: 0 15px; // 左右内边距15px
+      transition: all 0.3s ease-in-out; // 过渡效果
+      border-bottom: 3px solid transparent; // 默认透明边框
 
+      // 图标样式
+      .anticon {
+        font-size: @iconSize; // 设置字体大小
+        margin-right: 8px; // 右侧外边距8px
+        transition: color 0.3s ease; // 图标过渡
+      }
+
+      // 文字样式
+      .desktop-navbar-label {
+        margin-top: 0; // 去除上边距
+        font-size: 15px; // 设置字体大小
+      }
+      
+      // 活动项样式
       &.navbar-active-item {
-        box-shadow: inset 3px 0 0 @activeItemColor;
-
+        border-bottom: 3px solid @activeItemColor; // 添加底部边框
+        color: @activeItemColor; // 文字颜色与活动项颜色一致
         .anticon {
-          color: @activeItemColor;
+          color: @activeItemColor; // 图标颜色与活动项颜色一致          
         }
       }
-
-      &.ant-menu-submenu-open,
-      &.ant-menu-submenu-active,
-      &:hover,
-      &:active,
-      &:focus,
-      &:focus-within {
-        color: #fff;
+      
+      // 鼠标悬浮样式
+      &:hover:not(.ant-menu-submenu-open) {
+        color: #fff; // 文字颜色变为白色
       }
-
-      .anticon {
-        font-size: @iconSize;
-        margin: 0;
+      
+      // 当子菜单打开时的样式
+      &.ant-menu-submenu-open {
+        color: @textColor; // 保持默认文字颜色
       }
-
-      .desktop-navbar-label {
-        margin-top: 4px;
-        font-size: 11px;
+      
+      // 链接、文字、图标颜色继承
+      a, span, .anticon {
+        color: inherit; // 链接、文字、图标颜色继承
       }
-
-      a,
-      span,
-      .anticon {
-        color: inherit;
-      }
+      
     }
 
-    .ant-menu-submenu-arrow {
-      display: none;
-    }
-
-    .ant-menu-item,
-    .ant-menu-submenu {
-      padding: 0;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .ant-menu-submenu-title {
-      width: 100%;
-      padding: 0;
-    }
-
-    a,
-    &.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title,
-    .ant-menu-submenu-title {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      line-height: normal;
-      height: auto;
-      background: none;
-      color: inherit;
+    // 调整新建按钮位置
+    .ant-menu-submenu[data-test="CreateButton"] {
+      margin-left: 30px;
+      position: absolute;
+      left: 100px;
     }
   }
 
+  // 个人中心菜单样式
   .desktop-navbar-profile-menu {
-    .desktop-navbar-profile-menu-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    margin-left: auto; // 右侧外边距自动
+  }
+}
 
-      .profile__image_thumb {
-        margin: 0;
-        vertical-align: middle;
-        width: @iconSize;
-        height: @iconSize;
+// 修复子菜单样式
+.ant-menu-submenu-popup {
+  z-index: 1050; // 设置层级
+  
+  // 子菜单样式
+  .desktop-navbar-submenu {
+    margin-top: 1px !important; // 设置上边距
+    
+    // 子菜单容器样式
+    .ant-menu {
+      flex-direction: column; // 垂直排列
+      min-width: 160px; // 最小宽度160px
+      background: @backgroundColor; // 背景颜色与导航栏背景色一致
+      border-radius: 0 0 4px 4px; // 设置圆角
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); // 设置阴影
+      
+      // 子菜单项样式
+      .ant-menu-item {
+        height: auto; // 高度自动
+        line-height: normal; // 行高正常
+        padding: 10px 15px; // 左右内边距10px
+        margin: 0; // 去除外边距
+        display: block; // 显示为块级元素
+        color: @textColor; // 文字颜色
+        
+        // 鼠标悬浮样式
+        &:hover {
+          color: #fff; // 文字颜色变为白色
+          background: rgba(255, 255, 255, 0.1); // 背景颜色变为半透明白色
+        }
+        
+        // 链接、文字、按钮颜色继承
+        a, span, button {
+          color: inherit; // 链接、文字、按钮颜色继承
+          width: 100%; // 宽度100%
+          text-align: left; // 文字左对齐
+          padding: 0; // 去除内边距
+        }
+      }
+      
+      // 分隔线样式
+      .ant-menu-item-divider {
+        background: @dividerColor; // 背景颜色
+        margin: 4px 0; // 上下外边距4px
+      }
+      
+      // 版本信息样式
+      .version-info {
+        padding: 10px 15px; // 左右内边距10px
+        
+        // 链接样式
+        a {
+          color: rgba(255, 255, 255, 0.8); // 文字颜色
+          
+          // 鼠标悬浮样式
+          &:hover {
+            color: rgba(255, 255, 255, 1); // 文字颜色变为白色
+          }
+        }
       }
     }
   }
 }
 
-.desktop-navbar-submenu {
-  .ant-menu {
-    .ant-menu-item-divider {
-      background: @dividerColor;
-    }
-
+// 修改子菜单样式
+.ant-menu-dark {
+  .ant-menu-sub {
+    background: @backgroundColor !important;
+    color: @textColor;
+    
     .ant-menu-item {
-      font-weight: 500;
-      color: @textColor;
-
-      &:hover,
-      &:active,
-      &:focus,
-      &:focus-within {
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      margin-left: 0;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
+        background: #1890ff;
+        transition: width 0.3s ease-in-out;
+        z-index: 0; // 调整层级
+      }
+      
+      // 确保文字在背景之上
+      > * {
+        position: relative;
+        z-index: 1;
+      }
+      
+      &:hover {
         color: #fff;
-      }
-
-      a,
-      span,
-      .anticon {
-        color: inherit;
-      }
-
-      .zmdi,
-      .fa {
-        margin-right: 5px;
-      }
-
-      &.version-info {
-        height: auto;
-        line-height: normal;
-        padding-top: 12px;
-        padding-bottom: 12px;
-
-        a {
-          color: rgba(255, 255, 255, 0.8);
-
-          &:hover,
-          &:active,
-          &:focus,
-          &:focus-within {
-            color: rgba(255, 255, 255, 1);
-          }
+        padding-left: 8px;
+        
+        &::before {
+          width: 100%;
         }
       }
     }

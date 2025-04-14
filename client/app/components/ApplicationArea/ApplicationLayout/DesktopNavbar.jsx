@@ -21,14 +21,6 @@ import VersionInfo from "./VersionInfo";
 
 import "./DesktopNavbar.less";
 
-function NavbarSection({ children, ...props }) {
-  return (
-    <Menu selectable={false} mode="vertical" theme="dark" {...props}>
-      {children}
-    </Menu>
-  );
-}
-
 function useNavbarActiveState() {
   const currentRoute = useCurrentRoute();
 
@@ -74,48 +66,18 @@ export default function DesktopNavbar() {
 
   return (
     <nav className="desktop-navbar">
-      <NavbarSection className="desktop-navbar-logo">
-        <div role="menuitem">
-          <Link href="./">
-            <img src={newLogoUrl} alt="reredash" />
-          </Link>
-        </div>
-      </NavbarSection>
+      <div className="desktop-navbar-logo">
+        <Link href="./">
+          <img src={newLogoUrl} alt="reredash" />
+        </Link>
+      </div>
 
-      <NavbarSection>
-        {currentUser.hasPermission("list_dashboards") && (
-          <Menu.Item key="dashboards" className={activeState.dashboards ? "navbar-active-item" : null}>
-            <Link href="dashboards">
-              <DesktopOutlinedIcon aria-label="Dashboard navigation button" />
-              <span className="desktop-navbar-label">看板</span>
-            </Link>
-          </Menu.Item>
-        )}
-        {currentUser.hasPermission("view_query") && (
-          <Menu.Item key="queries" className={activeState.queries ? "navbar-active-item" : null}>
-            <Link href="queries">
-              <CodeOutlinedIcon aria-label="Queries navigation button" />
-              <span className="desktop-navbar-label">查询</span>
-            </Link>
-          </Menu.Item>
-        )}
-        {currentUser.hasPermission("list_alerts") && (
-          <Menu.Item key="alerts" className={activeState.alerts ? "navbar-active-item" : null}>
-            <Link href="alerts">
-              <AlertOutlinedIcon aria-label="Alerts navigation button" />
-              <span className="desktop-navbar-label">告警</span>
-            </Link>
-          </Menu.Item>
-        )}
-      </NavbarSection>
-
-      <NavbarSection className="desktop-navbar-spacer">
+      <Menu mode="horizontal" theme="dark" selectable={false} className="desktop-navbar-menu">
         {(canCreateQuery || canCreateDashboard || canCreateAlert) && (
           <Menu.SubMenu
             key="create"
             popupClassName="desktop-navbar-submenu"
             data-test="CreateButton"
-            tabIndex={0}
             title={
               <React.Fragment>
                 <PlusOutlinedIcon />
@@ -145,15 +107,38 @@ export default function DesktopNavbar() {
             )}
           </Menu.SubMenu>
         )}
-      </NavbarSection>
-
-      <NavbarSection>
-        <Menu.Item key="help">
-          <HelpTrigger showTooltip={false} type="HOME" tabIndex={0}>
-            <QuestionCircleOutlinedIcon />
-            <span className="desktop-navbar-label">帮助</span>
-          </HelpTrigger>
-        </Menu.Item>
+        {currentUser.hasPermission("list_dashboards") && (
+          <Menu.Item key="dashboards" className={activeState.dashboards ? "navbar-active-item" : null}>
+            <Link href="dashboards">
+              <DesktopOutlinedIcon />
+              <span className="desktop-navbar-label">看板</span>
+            </Link>
+          </Menu.Item>
+        )}
+        {currentUser.hasPermission("view_query") && (
+          <Menu.Item key="queries" className={activeState.queries ? "navbar-active-item" : null}>
+            <Link href="queries">
+              <CodeOutlinedIcon />
+              <span className="desktop-navbar-label">查询</span>
+            </Link>
+          </Menu.Item>
+        )}
+        {currentUser.hasPermission("list_alerts") && (
+          <Menu.Item key="alerts" className={activeState.alerts ? "navbar-active-item" : null}>
+            <Link href="alerts">
+              <AlertOutlinedIcon />
+              <span className="desktop-navbar-label">告警</span>
+            </Link>
+          </Menu.Item>
+        )}
+        {false && ( // 暂时隐藏帮助选项卡
+          <Menu.Item key="help">
+            <HelpTrigger showTooltip={false} type="HOME">
+              <QuestionCircleOutlinedIcon />
+              <span className="desktop-navbar-label">帮助</span>
+            </HelpTrigger>
+          </Menu.Item>
+        )}
         {firstSettingsTab && (
           <Menu.Item key="settings" className={activeState.dataSources ? "navbar-active-item" : null}>
             <Link href={firstSettingsTab.path} data-test="SettingsLink">
@@ -162,18 +147,16 @@ export default function DesktopNavbar() {
             </Link>
           </Menu.Item>
         )}
-      </NavbarSection>
-
-      <NavbarSection className="desktop-navbar-profile-menu">
-        <Menu.SubMenu
-          key="profile"
+        <Menu.SubMenu 
+          key="profile" 
           popupClassName="desktop-navbar-submenu"
-          tabIndex={0}
           title={
-            <span data-test="ProfileDropdown" className="desktop-navbar-profile-menu-title">
-              <img className="profile__image_thumb" src={currentUser.profile_image_url} alt={currentUser.name} />
+            <span className="desktop-navbar-profile-menu-title">
+              <span className="desktop-navbar-label">{currentUser.name}</span>
             </span>
-          }>
+          }
+          className="desktop-navbar-profile-menu"
+        >
           <Menu.Item key="profile">
             <Link href="users/me">个人中心</Link>
           </Menu.Item>
@@ -193,7 +176,7 @@ export default function DesktopNavbar() {
             <VersionInfo />
           </Menu.Item>
         </Menu.SubMenu>
-      </NavbarSection>
+      </Menu>
     </nav>
   );
 }

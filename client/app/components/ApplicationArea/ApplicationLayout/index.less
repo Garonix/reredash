@@ -2,16 +2,18 @@
 
 body #application-root {
   @topMenuHeight: 49px;
+  @desktopNavbarHeight: 60px;
 
   display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  padding-bottom: 0 !important;
+  flex-direction: column;
   height: 100vh;
 
   .application-layout-side-menu {
-    height: 100vh;
-    position: relative;
+    height: @desktopNavbarHeight;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
     @media @mobileBreakpoint {
       display: none;
@@ -34,15 +36,12 @@ body #application-root {
   }
 
   .application-layout-content {
-    display: flex;
-    flex-direction: column;
+    flex: 1;
     overflow-y: auto;
-
-    flex: 1 1 auto;
-    padding-bottom: 15px;
+    padding: 15px;
 
     @media @mobileBreakpoint {
-      margin-top: @topMenuHeight; // compensate for app header fixed position
+      margin-top: @topMenuHeight;
     }
   }
 }
@@ -64,8 +63,7 @@ body.headless #application-root {
   }
 }
 
-// Fixes for proper snapshots in Percy (move vertical scroll to body level
-// to capture entire page, otherwise it wll be cut by viewport)
+// Fixes for proper snapshots in Percy
 @media only percy {
   body #application-root {
     height: auto;
