@@ -4,7 +4,7 @@ body.fixed-layout {
 
   #application-root {
     display: flex;
-    flex-direction: row;
+    // flex-direction: row;
     padding-bottom: 0;
 
     width: 100vw;
@@ -157,10 +157,14 @@ body.fixed-layout {
 }
 
 .query-page-wrapper {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
+  padding: 15 0;
 }
 
 .query-fullscreen {
