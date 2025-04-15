@@ -1,3 +1,11 @@
+/*
+ * ESLint配置文件 - 定义Redash前端代码规范
+ * 主要功能：
+ * - 继承React推荐规则
+ * - 配置浏览器/Node环境
+ * - 定义JSX可访问性规则
+ * - 开发/生产环境差异化配置
+ */
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",

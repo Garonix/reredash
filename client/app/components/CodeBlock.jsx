@@ -1,3 +1,12 @@
+/*
+ * CodeBlock组件 - 用于显示代码块并提供复制功能
+ * 主要功能：
+ * - 高亮显示代码内容
+ * - 实现一键复制代码功能
+ * - 提供复制成功反馈
+ * - 支持自定义样式
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "antd/lib/button";
@@ -41,10 +50,10 @@ export default class CodeBlock extends React.Component {
       if (!success) {
         throw new Error();
       }
-      this.setState({ copied: "Copied!" });
+      this.setState({ copied: "已复制" });
     } catch (err) {
       this.setState({
-        copied: "Copy failed",
+        copied: "复制失败",
       });
     }
 

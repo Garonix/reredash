@@ -1,3 +1,13 @@
+"""
+URL查询运行器(已弃用)
+
+该文件实现了一个简单的URL查询运行器，主要特性包括:
+1. 继承自BaseHTTPQueryRunner
+2. 支持相对URL和绝对URL访问
+3. 标记为@deprecated，建议使用其他替代方案
+4. 返回原始HTTP响应内容
+"""
+
 from redash.query_runner import BaseHTTPQueryRunner, register
 from redash.utils import deprecated
 

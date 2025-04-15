@@ -1,3 +1,14 @@
+"""
+查询结果数据源实现
+
+该文件实现了将其他查询结果作为数据源的功能，主要特性包括:
+1. 支持引用其他查询结果(query_xxx)和缓存结果(cached_query_xxx)
+2. 提供SQLite内存数据库作为查询引擎
+3. 支持参数化查询(param_query_xxx_{params})
+4. 自动处理列名特殊字符和数据类型推断
+5. 严格的权限检查确保数据安全
+"""
+
 import datetime
 import decimal
 import hashlib

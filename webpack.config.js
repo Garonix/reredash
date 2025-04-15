@@ -1,3 +1,11 @@
+/*
+ * Webpack配置文件 - 用于Redash项目前端资源打包
+ * 主要功能：
+ * - 配置开发/生产环境
+ * - 处理JS/CSS/静态资源
+ * - 支持热更新(HMR)
+ * - 支持自定义扩展
+ */
 /* eslint-disable */
 
 const webpack = require("webpack");

@@ -1,3 +1,14 @@
+"""
+Prometheus查询运行器实现
+
+该文件实现了Redash与Prometheus监控系统的集成，主要功能包括:
+1. 支持即时查询(get_instant_rows)和范围查询(get_range_rows)
+2. 提供Prometheus查询运行器类(Prometheus)，继承自BaseQueryRunner
+   - 处理证书认证、时间范围转换、查询执行等
+3. 支持Prometheus HTTP API的所有查询参数
+4. 自动处理时间范围(now、时间戳转换等)
+"""
+
 import os
 import time
 from base64 import b64decode

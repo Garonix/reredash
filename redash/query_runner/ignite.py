@@ -1,3 +1,14 @@
+"""
+Apache Ignite查询运行器实现
+
+该文件实现了Redash与Apache Ignite/GridGain数据库的连接和查询功能，主要包含:
+1. 类型映射配置(types_map)
+2. Ignite查询运行器类(Ignite)，继承自BaseSQLQueryRunner
+   - 提供连接配置、查询执行、模式获取等功能
+3. 支持pyignite和pygridgain两种客户端库
+4. 支持SSL/TLS、分布式连接等高级配置
+"""
+
 import datetime
 import importlib.util
 import logging

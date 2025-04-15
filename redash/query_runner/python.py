@@ -1,3 +1,15 @@
+"""
+Python查询运行器实现
+
+该文件实现了在Redash中执行Python脚本的功能，主要特性包括:
+1. 使用RestrictedPython提供安全的沙箱环境
+2. 支持自定义导入模块和安全的内置函数
+3. 提供结果集操作辅助函数(add_result_column等)
+4. 集成打印日志功能(CustomPrint)
+5. 支持与其他数据源交互(execute_query等)
+6. 可选Pandas集成支持
+"""
+
 import datetime
 import importlib
 import logging

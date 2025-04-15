@@ -1,3 +1,12 @@
+/*
+ * CreateSourceDialog组件 - 用于创建新数据源的对话框
+ * 主要功能：
+ * - 提供数据源类型选择界面
+ * - 处理数据源配置表单
+ * - 实现数据源创建流程
+ * - 支持搜索筛选数据源类型
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import { isEmpty, toUpper, includes, get, uniqueId } from "lodash";
@@ -69,7 +78,7 @@ class CreateSourceDialog extends React.Component {
         })
         .catch(error => {
           this.setState({ savingSource: false, currentStep: StepEnum.CONFIGURE_IT });
-          errorCallback(get(error, "response.data.message", "Failed saving."));
+          errorCallback(get(error, "response.data.message", "保存失败."));
         });
     }
   };
