@@ -111,7 +111,7 @@ class Databricks(BaseSQLQueryRunner):
                 data = {"columns": columns, "rows": rows}
 
                 if len(result_set) >= ROW_LIMIT and cursor.fetchone() is not None:
-                    logger.warning("Truncated result set.")
+                    logger.warning("结果集已被截断。")
                     statsd_client.incr("redash.query_runner.databricks.truncated")
                     data["truncated"] = True
                 error = None
@@ -119,7 +119,7 @@ class Databricks(BaseSQLQueryRunner):
                 error = None
                 data = {
                     "columns": [{"name": "result", "type": TYPE_STRING}],
-                    "rows": [{"result": "No data was returned."}],
+                    "rows": [{"result": "未返回数据。"}],
                 }
 
             cursor.close()

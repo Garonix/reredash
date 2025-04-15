@@ -1,3 +1,13 @@
+"""
+Exasol查询运行器实现
+
+该文件实现了Redash与Exasol数据库的连接和查询功能，主要包含:
+1. 类型映射函数(_exasol_type_mapper和_type_mapper)
+2. Exasol查询运行器类(Exasol)，继承自BaseQueryRunner
+   - 提供连接配置、查询执行、模式获取等功能
+3. 依赖pyexasol库，若未安装则禁用该运行器
+"""
+
 import datetime
 
 from redash.query_runner import (

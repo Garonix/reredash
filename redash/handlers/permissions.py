@@ -44,12 +44,12 @@ class ObjectPermissionsListResource(BaseResource):
         access_type = req["access_type"]
 
         if access_type not in ACCESS_TYPES:
-            abort(400, message="Unknown access type.")
+            abort(400, message="未知的访问类型")
 
         try:
             grantee = User.get_by_id_and_org(req["user_id"], self.current_org)
         except NoResultFound:
-            abort(400, message="User not found.")
+            abort(400, message="用户不存在")
 
         permission = AccessPermission.grant(obj, access_type, grantee, self.current_user)
         db.session.commit()
@@ -78,7 +78,7 @@ class ObjectPermissionsListResource(BaseResource):
 
         grantee = User.query.get(req["user_id"])
         if grantee is None:
-            abort(400, message="User not found.")
+            abort(400, message="用户不存在")
 
         AccessPermission.revoke(obj, grantee, access_type)
         db.session.commit()

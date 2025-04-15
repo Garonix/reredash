@@ -43,16 +43,16 @@ def error_response(message, http_status=400):
 
 error_messages = {
     "unsafe_when_shared": error_response(
-        "This query contains potentially unsafe parameters and cannot be executed on a shared dashboard or an embedded visualization.",
+        "此查询包含潜在的不安全参数，无法在共享仪表板或嵌入可视化中执行。",
         403,
     ),
     "unsafe_on_view_only": error_response(
-        "This query contains potentially unsafe parameters and cannot be executed with read-only access to this data source.",
+        "此查询包含潜在的不安全参数，无法在只读访问此数据源时执行。",
         403,
     ),
-    "no_permission": error_response("You do not have permission to run queries with this data source.", 403),
-    "select_data_source": error_response("Please select data source to run this query.", 401),
-    "no_data_source": error_response("Target data source not available.", 401),
+    "no_permission": error_response("您没有权限使用此数据源运行查询。", 403),
+    "select_data_source": error_response("请选择数据源以运行此查询。", 401),
+    "no_data_source": error_response("目标数据源不可用。", 401),
 }
 
 
@@ -62,9 +62,9 @@ def run_query(query, parameters, data_source, query_id, should_apply_auto_limit,
 
     if data_source.paused:
         if data_source.pause_reason:
-            message = "{} is paused ({}). Please try later.".format(data_source.name, data_source.pause_reason)
+            message = "{} 已暂停 ({}). 请稍后重试.".format(data_source.name, data_source.pause_reason)
         else:
-            message = "{} is paused. Please try later.".format(data_source.name)
+            message = "{} 已暂停. 请稍后重试.".format(data_source.name)
 
         return error_response(message)
 
@@ -76,7 +76,7 @@ def run_query(query, parameters, data_source, query_id, should_apply_auto_limit,
     query_text = data_source.query_runner.apply_auto_limit(query.text, should_apply_auto_limit)
 
     if query.missing_params:
-        return error_response("Missing parameter value for: {}".format(", ".join(query.missing_params)))
+        return error_response("缺少参数值: {}".format(", ".join(query.missing_params)))
 
     if max_age == 0:
         query_result = None
@@ -144,16 +144,13 @@ class QueryResultListResource(BaseResource):
     @require_permission("execute_query")
     def post(self):
         """
-        Execute a query (or retrieve recent results).
+        执行查询（或检索最近结果）。
 
-        :qparam string query: The query text to execute
-        :qparam number query_id: The query object to update with the result (optional)
-        :qparam number max_age: If query results less than `max_age` seconds old are available,
-                                return them, otherwise execute the query; if omitted or -1, returns
-                                any cached result, or executes if not available. Set to zero to
-                                always execute.
-        :qparam number data_source_id: ID of data source to query
-        :qparam object parameters: A set of parameter values to apply to the query.
+        :qparam string query: 要执行的查询文本
+        :qparam number query_id: 要更新结果的查询对象（可选）
+        :qparam number max_age: 如果查询结果小于 `max_age` 秒，则返回它们，否则执行查询；如果省略或 -1，返回任何缓存结果，或如果不可用则执行
+        :qparam number data_source_id: 要查询的数据源 ID
+        :qparam object parameters: 要应用到查询的参数值集合
         """
         params = request.get_json(force=True)
 
@@ -240,14 +237,11 @@ class QueryResultResource(BaseResource):
     @require_any_of_permission(("view_query", "execute_query"))
     def post(self, query_id):
         """
-        Execute a saved query.
+        执行保存的查询。
 
-        :param number query_id: The ID of the query whose results should be fetched.
-        :param object parameters: The parameter values to apply to the query.
-        :qparam number max_age: If query results less than `max_age` seconds old are available,
-                                return them, otherwise execute the query; if omitted or -1, returns
-                                any cached result, or executes if not available. Set to zero to
-                                always execute.
+        :param number query_id: 查询 ID，用于获取结果
+        :param object parameters: 要应用到查询的参数值集合
+        :qparam number max_age: 如果查询结果小于 `max_age` 秒，则返回它们，否则执行查询；如果省略或 -1，返回任何缓存结果，或如果不可用则执行
         """
         params = request.get_json(force=True, silent=True) or {}
         parameter_values = params.get("parameters", {})
@@ -287,24 +281,24 @@ class QueryResultResource(BaseResource):
     @require_any_of_permission(("view_query", "execute_query"))
     def get(self, query_id=None, query_result_id=None, filetype="json"):
         """
-        Retrieve query results.
+        获取查询结果。
 
-        :param number query_id: The ID of the query whose results should be fetched
-        :param number query_result_id: the ID of the query result to fetch
-        :param string filetype: Format to return. One of 'json', 'xlsx', or 'csv'. Defaults to 'json'.
+        :param number query_id: 查询 ID，用于获取结果
+        :param number query_result_id: 查询结果 ID，用于获取特定结果
+        :param string filetype: 返回格式。可选 'json', 'xlsx', 或 'csv'。默认为 'json'。
 
-        :<json number id: Query result ID
-        :<json string query: Query that produced this result
-        :<json string query_hash: Hash code for query text
-        :<json object data: Query output
-        :<json number data_source_id: ID of data source that produced this result
-        :<json number runtime: Length of execution time in seconds
-        :<json string retrieved_at: Query retrieval date/time, in ISO format
+        :<json number id: 查询结果 ID
+        :<json string query: 生成此结果的查询
+        :<json string query_hash: 查询文本的哈希代码
+        :<json object data: 查询输出
+        :<json number data_source_id: 生成此结果的数据源 ID
+        :<json number runtime: 执行时间（秒）
+        :<json string retrieved_at: 查询检索日期/时间，ISO 格式
         """
         # TODO:
-        # This method handles two cases: retrieving result by id & retrieving result by query id.
-        # They need to be split, as they have different logic (for example, retrieving by query id
-        # should check for query parameters and shouldn't cache the result).
+        # 本方法处理两种情况：通过 ID 获取结果和通过查询 ID 获取结果。
+        # 它们需要被拆分，因为它们有不同的逻辑（例如，通过查询 ID 获取结果时
+        # 应该检查查询参数，不应该缓存结果）。
         should_cache = query_result_id is not None
 
         query_result = None
@@ -325,7 +319,7 @@ class QueryResultResource(BaseResource):
 
             if query is not None and query_result is not None and self.current_user.is_api_user():
                 if query.query_hash != query_result.query_hash:
-                    abort(404, message="No cached result found for this query.")
+                    abort(404, message="未找到此查询的缓存结果。")
 
         if query_result:
             require_access(query_result.data_source, self.current_user, view_only)
@@ -372,7 +366,7 @@ class QueryResultResource(BaseResource):
             return response
 
         else:
-            abort(404, message="No cached result found for this query.")
+            abort(404, message="未找到此查询的缓存结果。")
 
     @staticmethod
     def make_json_response(query_result):
@@ -399,14 +393,14 @@ class QueryResultResource(BaseResource):
 class JobResource(BaseResource):
     def get(self, job_id, query_id=None):
         """
-        Retrieve info about a running query job.
+        获取正在运行的查询作业的信息。
         """
         job = Job.fetch(job_id)
         return serialize_job(job)
 
     def delete(self, job_id):
         """
-        Cancel a query job in progress.
+        取消正在运行的查询作业。
         """
         job = Job.fetch(job_id)
         job.cancel()
