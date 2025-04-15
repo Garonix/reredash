@@ -158,26 +158,36 @@ class CreateSourceDialog extends React.Component {
     );
   }
 
+  componentDidMount() {
+    const { types } = this.props;
+    if (types.length === 1 && types[0].type === "prometheus") {
+      this.setState({
+        selectedType: types[0],
+        currentStep: StepEnum.CONFIGURE_IT,
+      });
+    }
+  }
+
   render() {
     const { currentStep, savingSource } = this.state;
-    const { dialog, sourceType } = this.props;
+    const { dialog, types } = this.props;
     return (
       <Modal
         {...dialog.props}
-        title={`Create a New ${sourceType}`}
+        title={`创建新的数据源`}
         footer={
-          currentStep === StepEnum.SELECT_TYPE
+          currentStep === StepEnum.SELECT_TYPE && types.length > 1
             ? [
                 <Button key="cancel" onClick={() => dialog.dismiss()} data-test="CreateSourceCancelButton">
-                  Cancel
+                  取消
                 </Button>,
                 <Button key="submit" type="primary" disabled>
-                  Create
+                  创建
                 </Button>,
               ]
             : [
-                <Button key="previous" onClick={this.resetType}>
-                  Previous
+                <Button key="previous" onClick={this.resetType} style={{ display: types.length > 1 ? undefined : "none" }}>
+                  上一步
                 </Button>,
                 <Button
                   key="submit"
@@ -186,22 +196,24 @@ class CreateSourceDialog extends React.Component {
                   type="primary"
                   loading={savingSource}
                   data-test="CreateSourceSaveButton">
-                  Create
+                  创建
                 </Button>,
               ]
         }>
         <div data-test="CreateSourceDialog">
           <Steps className="hidden-xs m-b-10" size="small" current={currentStep} progressDot>
-            {currentStep === StepEnum.CONFIGURE_IT ? (
-              <Step title={<a>选择数据源</a>} className="clickable" onClick={this.resetType} />
-            ) : (
-              <Step title="选择数据源" />
+            {types.length > 1 && (
+              currentStep === StepEnum.CONFIGURE_IT ? (
+                <Step title={<a>选择数据源</a>} className="clickable" onClick={this.resetType} />
+              ) : (
+                <Step title="选择数据源" />
+              )
             )}
             <Step title="配置" />
             <Step title="完成" />
           </Steps>
-          {currentStep === StepEnum.SELECT_TYPE && this.renderTypeSelector()}
-          {currentStep !== StepEnum.SELECT_TYPE && this.renderForm()}
+          {currentStep === StepEnum.SELECT_TYPE && types.length > 1 ? this.renderTypeSelector() : null}
+          {currentStep === StepEnum.CONFIGURE_IT ? this.renderForm() : null}
         </div>
       </Modal>
     );

@@ -11,7 +11,7 @@ export default function FileField({ form, field, ...otherProps }) {
   return (
     <Upload {...otherProps} beforeUpload={() => false}>
       <Button disabled={disabled}>
-        <UploadOutlinedIcon /> Click to upload
+        <UploadOutlinedIcon /> 点击上传
       </Button>
     </Upload>
   );

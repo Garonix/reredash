@@ -92,12 +92,12 @@ function getFields(type = {}, target = { options: {} }) {
   const inputs = [
     {
       name: "name",
-      title: "Name",
+      title: "数据源名称",
       type: "text",
       required: true,
       initialValue: target.name,
       contentAfter: React.createElement("hr"),
-      placeholder: `My ${type.name}`,
+      placeholder: `请输入 Prometheus 名称`,
       autoFocus: isNewTarget,
     },
     ...orderedInputs(configurationSchema.properties, configurationSchema.order, target.options),

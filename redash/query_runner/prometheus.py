@@ -172,15 +172,15 @@ class Prometheus(BaseQueryRunner):
         return {
             "type": "object",
             "properties": {
-                "url": {"type": "string", "title": "Prometheus API URL"},
+                "url": {"type": "string", "title": "Prometheus API 地址"},
                 "verify_ssl": {
                     "type": "boolean",
-                    "title": "Verify SSL (Ignored, if SSL Root Certificate is given)",
+                    "title": "验证 SSL（如已提供根证书则忽略）",
                     "default": True,
                 },
-                "cert_File": {"type": "string", "title": "SSL Client Certificate", "default": None},
-                "cert_key_File": {"type": "string", "title": "SSL Client Key", "default": None},
-                "ca_cert_File": {"type": "string", "title": "SSL Root Certificate", "default": None},
+                "cert_File": {"type": "string", "title": "SSL 客户端证书", "default": None},
+                "cert_key_File": {"type": "string", "title": "SSL 客户端密钥", "default": None},
+                "ca_cert_File": {"type": "string", "title": "SSL 根证书", "default": None},
             },
             "required": ["url"],
             "secret": ["cert_File", "cert_key_File", "ca_cert_File"],

@@ -2,12 +2,12 @@ import settingsMenu from "./settingsMenu";
 
 const dataSourcesItem = {
   permission: "admin",
-  title: "Data Sources",
+  title: "数据源",
   path: "data_sources",
 };
 
 const usersItem = {
-  title: "Users",
+  title: "用户",
   path: "users",
 };
 

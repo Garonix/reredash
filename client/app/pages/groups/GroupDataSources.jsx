@@ -48,7 +48,7 @@ class GroupDataSources extends React.Component {
     {
       key: "datasources",
       href: `groups/${this.groupId}/data_sources`,
-      title: "Data Sources",
+      title: "数据源",
       isAvailable: () => currentUser.isAdmin,
     },
   ];
@@ -88,7 +88,7 @@ class GroupDataSources extends React.Component {
     Columns.custom(
       (text, datasource) => (
         <Button className="w-100" type="danger" onClick={() => this.removeGroupDataSource(datasource)}>
-          Remove
+          删除
         </Button>
       ),
       {
@@ -189,11 +189,11 @@ class GroupDataSources extends React.Component {
             {!controller.isLoaded && <LoadingState className="" />}
             {controller.isLoaded && controller.isEmpty && (
               <div className="text-center">
-                <p>There are no data sources in this group yet.</p>
+                <p>当前组没有数据源</p>
                 {currentUser.isAdmin && (
                   <Button type="primary" onClick={this.addDataSources}>
                     <i className="fa fa-plus m-r-5" aria-hidden="true" />
-                    Add Data Sources
+                    新建数据源
                   </Button>
                 )}
               </div>
@@ -249,7 +249,7 @@ routes.register(
   "Groups.DataSources",
   routeWithUserSession({
     path: "/groups/:groupId/data_sources",
-    title: "Group Data Sources",
+    title: "数据源",
     render: pageProps => <GroupDataSourcesPage {...pageProps} currentPage="datasources" />,
   })
 );

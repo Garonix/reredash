@@ -25,9 +25,9 @@ class ChangePasswordDialog extends React.Component {
   }
 
   fieldError = (name, value) => {
-    if (value.length === 0) return "This field is required.";
-    if (name !== "currentPassword" && value.length < 6) return "This field is too short.";
-    if (name === "repeatPassword" && value !== this.state.newPassword.value) return "Passwords don't match";
+    if (value.length === 0) return "必填项";
+    if (name !== "currentPassword" && value.length < 6) return "字段长度过短";
+    if (name === "repeatPassword" && value !== this.state.newPassword.value) return "密码不匹配";
     return null;
   };
 

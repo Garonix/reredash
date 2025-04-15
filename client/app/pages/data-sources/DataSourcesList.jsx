@@ -140,7 +140,7 @@ class DataSourcesList extends React.Component {
         <div className="m-b-15">
           <Button {...newDataSourceProps}>
             <i className="fa fa-plus m-r-5" aria-hidden="true" />
-            New Data Source
+            新建数据源
           </Button>
           <DynamicComponent name="DataSourcesListExtra" />
         </div>
@@ -162,7 +162,7 @@ const DataSourcesListPage = wrapSettingsTab(
   "DataSources.List",
   {
     permission: "admin",
-    title: "Data Sources",
+    title: "数据源",
     path: "data_sources",
     order: 1,
   },
@@ -173,7 +173,7 @@ routes.register(
   "DataSources.List",
   routeWithUserSession({
     path: "/data_sources",
-    title: "Data Sources",
+    title: "数据源",
     render: pageProps => <DataSourcesListPage {...pageProps} />,
   })
 );
@@ -181,7 +181,7 @@ routes.register(
   "DataSources.New",
   routeWithUserSession({
     path: "/data_sources/new",
-    title: "Data Sources",
+    title: "数据源",
     render: pageProps => <DataSourcesListPage {...pageProps} isNewDataSourcePage />,
   })
 );

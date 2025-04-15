@@ -45,9 +45,9 @@ class EditDataSource extends React.Component {
     const { dataSource } = this.state;
     helper.updateTargetWithValues(dataSource, values);
     DataSource.save(dataSource)
-      .then(() => successCallback("Saved."))
+      .then(() => successCallback("保存成功."))
       .catch(error => {
-        const message = get(error, "response.data.message", "Failed saving.");
+        const message = get(error, "response.data.message", "保存失败.");
         errorCallback(message);
       });
   };
@@ -58,7 +58,7 @@ class EditDataSource extends React.Component {
     const doDelete = () => {
       DataSource.delete(dataSource)
         .then(() => {
-          notification.success("Data source deleted successfully.");
+          notification.success("数据源删除成功。");
           navigateTo("data_sources");
         })
         .catch(() => {
@@ -67,9 +67,9 @@ class EditDataSource extends React.Component {
     };
 
     Modal.confirm({
-      title: "Delete Data Source",
-      content: "Are you sure you want to delete this data source?",
-      okText: "Delete",
+      title: "删除数据源",
+      content: "确定要删除这个数据源吗？",
+      okText: "删除",
       okType: "danger",
       onOk: doDelete,
       onCancel: callback,
@@ -83,16 +83,16 @@ class EditDataSource extends React.Component {
     DataSource.test({ id: dataSource.id })
       .then(httpResponse => {
         if (httpResponse.ok) {
-          notification.success("Success");
+          notification.success("测试成功");
         } else {
-          notification.error("Connection Test Failed:", httpResponse.message, { duration: 10 });
+          notification.error("测试失败:", httpResponse.message, { duration: 10 });
         }
         callback();
       })
       .catch(() => {
         notification.error(
-          "Connection Test Failed:",
-          "Unknown error occurred while performing connection test. Please try again later.",
+          "测试失败:",
+          "未知错误，无法进行连接测试，请稍后再试。",
           { duration: 10 }
         );
         callback();
@@ -107,8 +107,8 @@ class EditDataSource extends React.Component {
       fields,
       type,
       actions: [
-        { name: "Delete", type: "danger", callback: this.deleteDataSource },
-        { name: "Test Connection", pullRight: true, callback: this.testConnection, disableWhenDirty: true },
+        { name: "删除", type: "danger", callback: this.deleteDataSource },
+        { name: "测试连接", pullRight: true, callback: this.testConnection, disableWhenDirty: true },
       ],
       onSubmit: this.saveDataSource,
       feedbackIcons: true,
@@ -147,7 +147,7 @@ routes.register(
   "DataSources.Edit",
   routeWithUserSession({
     path: "/data_sources/:dataSourceId",
-    title: "Data Sources",
+    title: "数据源",
     render: pageProps => <EditDataSourcePage {...pageProps} />,
   })
 );

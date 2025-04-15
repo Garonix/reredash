@@ -45,7 +45,7 @@ class GroupMembers extends React.Component {
     {
       key: "datasources",
       href: `groups/${this.groupId}/data_sources`,
-      title: "Data Sources",
+      title: "数据源",
       isAvailable: () => currentUser.isAdmin,
     },
   ];
@@ -152,11 +152,11 @@ class GroupMembers extends React.Component {
             {!controller.isLoaded && <LoadingState className="" />}
             {controller.isLoaded && controller.isEmpty && (
               <div className="text-center">
-                <p>There are no members in this group yet.</p>
+                <p>当前组没有成员</p>
                 {currentUser.isAdmin && (
                   <Button type="primary" onClick={this.addMembers}>
                     <i className="fa fa-plus m-r-5" aria-hidden="true" />
-                    Add Members
+                    新建成员
                   </Button>
                 )}
               </div>

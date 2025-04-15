@@ -82,7 +82,7 @@ export function DashboardAndQueryFavoritesList() {
                   <span className="btn-favorite m-r-5">
                     <i className="fa fa-star" aria-hidden="true" />
                   </span>
-                  Favorite <Link href="queries">Queries</Link> will appear here
+                  收藏的 <Link href="queries">查询</Link> 会显示在这里
                 </p>
               }
             />

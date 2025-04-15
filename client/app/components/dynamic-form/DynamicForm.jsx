@@ -30,9 +30,9 @@ const fieldRules = ({ type, required, minLength }) => {
   const emailTypeRule = type === "email";
 
   return [
-    requiredRule && { required, message: "This field is required." },
-    minLengthRule && { min: minLength, message: "This field is too short." },
-    emailTypeRule && { type: "email", message: "This field must be a valid email." },
+    requiredRule && { required, message: "必填项" },
+    minLengthRule && { min: minLength, message: "字段长度过短" },
+    emailTypeRule && { type: "email", message: "字段必须是有效的电子邮件地址" },
   ].filter(rule => rule);
 };
 
@@ -203,7 +203,7 @@ export default function DynamicForm({
             block
             className="extra-options-button"
             onClick={() => setShowExtraFields(currentShowExtraFields => !currentShowExtraFields)}>
-            Additional Settings
+            高级设置
             <i
               className={cx("fa m-l-5", { "fa-caret-up": showExtraFields, "fa-caret-down": !showExtraFields })}
               aria-hidden="true"
@@ -242,6 +242,6 @@ DynamicForm.defaultProps = {
   feedbackIcons: false,
   hideSubmitButton: false,
   defaultShowExtraFields: false,
-  saveText: "Save",
+  saveText: "保存",
   onSubmit: () => {},
 };
