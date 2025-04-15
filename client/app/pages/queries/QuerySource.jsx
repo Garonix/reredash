@@ -231,13 +231,13 @@ function QuerySource(props) {
               />
             </div>
 
-            {!query.isNew() && (
+            {!queryFlags.isNew && (
               <div className="query-page-query-description">
                 <EditInPlace
                   isEditable={queryFlags.canEdit}
                   markdown
                   ignoreBlanks={false}
-                  placeholder="Add description"
+                  placeholder="添加描述"
                   value={query.description}
                   onDone={updateQueryDescription}
                   multiline
@@ -245,7 +245,7 @@ function QuerySource(props) {
               </div>
             )}
 
-            {!query.isNew() && <QueryMetadata layout="table" query={query} onEditSchedule={editSchedule} />}
+            {!queryFlags.isNew && <QueryMetadata layout="table" query={query} onEditSchedule={editSchedule} />}
           </nav>
         </Resizable>
 
@@ -255,7 +255,7 @@ function QuerySource(props) {
               className="p-absolute d-flex flex-column p-l-15 p-r-15"
               style={{ left: 0, top: 0, right: 0, bottom: 0, overflow: "auto" }}>
               <Resizable direction="vertical" sizeAttribute="flex-basis">
-                <div className="row editor">
+                <div className="row editor" style={{ flexBasis: "40%" }}>
                   <section className="query-editor-wrapper" data-test="QueryEditor">
                     <QueryEditor
                       ref={editorRef}
@@ -270,14 +270,14 @@ function QuerySource(props) {
 
                     <QueryEditor.Controls
                       addParameterButtonProps={{
-                        title: "Add New Parameter",
+                        title: "添加新参数",
                         shortcut: "mod+p",
                         onClick: openAddNewParameterDialog,
                       }}
                       formatButtonProps={{
                         title: isFormatQueryAvailable
-                          ? "Format Query"
-                          : "Query formatting is not supported for your Data Source syntax",
+                          ? "格式化查询"
+                          : "当前数据源不支持格式化",
                         disabled: !dataSource || !isFormatQueryAvailable,
                         shortcut: isFormatQueryAvailable ? "mod+shift+f" : null,
                         onClick: formatQuery,
@@ -286,7 +286,7 @@ function QuerySource(props) {
                         queryFlags.canEdit && {
                           text: (
                             <React.Fragment>
-                              <span className="hidden-xs">Save</span>
+                              <span className="hidden-xs">保存</span>
                               {isDirty && !isQuerySaving ? "*" : null}
                             </React.Fragment>
                           ),
@@ -300,7 +300,7 @@ function QuerySource(props) {
                         shortcut: "mod+enter, alt+enter, ctrl+enter, shift+enter",
                         onClick: doExecuteQuery,
                         text: (
-                          <span className="hidden-xs">{selectedText === null ? "Execute" : "Execute Selected"}</span>
+                          <span className="hidden-xs">{selectedText === null ? "执行" : "执行选中"}</span>
                         ),
                       }}
                       autocompleteToggleProps={{
@@ -368,7 +368,7 @@ function QuerySource(props) {
                 <React.Fragment>
                   {queryResultData.log.length > 0 && (
                     <div className="query-results-log">
-                      <p>Log Information:</p>
+                      <p>日志信息：</p>
                       {map(queryResultData.log, (line, index) => (
                         <p key={`log-line-${index}`} className="query-log-line">
                           {line}
@@ -393,7 +393,7 @@ function QuerySource(props) {
                           loading={isQueryExecuting}
                           onClick={doExecuteQuery}>
                           {!isQueryExecuting && <i className="zmdi zmdi-refresh m-r-5" aria-hidden="true" />}
-                          Refresh Now
+                          立即刷新
                         </Button>
                       }
                     />
