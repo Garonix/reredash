@@ -6,15 +6,15 @@ import "@/redash-font/style.less";
 import recordEvent from "@/services/recordEvent";
 
 export default function AutocompleteToggle({ available, enabled, onToggle }) {
-  let tooltipMessage = "Live Autocomplete Enabled";
+  let tooltipMessage = "实时自动补全已启用";
   let icon = "icon-flash";
   if (!enabled) {
-    tooltipMessage = "Live Autocomplete Disabled";
+    tooltipMessage = "实时自动补全已禁用";
     icon = "icon-flash-off";
   }
 
   if (!available) {
-    tooltipMessage = "Live Autocomplete Not Available (Use Ctrl+Space to Trigger)";
+    tooltipMessage = "实时自动补全不可用 (使用 Ctrl+空格触发)";
     icon = "icon-flash-off";
   }
 
@@ -29,7 +29,7 @@ export default function AutocompleteToggle({ available, enabled, onToggle }) {
         className="query-editor-controls-button m-r-5"
         disabled={!available}
         onClick={handleClick}
-        aria-label={enabled ? "Disable live autocomplete" : "Enable live autocomplete"}>
+        aria-label={enabled ? "禁用实时自动补全" : "启用实时自动补全"}>
         <i className={"icon " + icon} aria-hidden="true" />
       </Button>
     </Tooltip>

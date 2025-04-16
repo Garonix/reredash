@@ -25,8 +25,8 @@ export default function QueryFormItem({ query, queryResult, onChange, editMode }
       </small>
     ) : (
       <small>
-        <WarningFilledIcon className="warning-icon-danger" /> This query has no <i>refresh schedule</i>.{" "}
-        <Tooltip title="A query schedule is not necessary but is highly recommended for alerts. An Alert without a query schedule will only send notifications if a user in your organization manually executes this query.">
+        <WarningFilledIcon className="warning-icon-danger" /> 此查询没有 <i>刷新计划</i>。{" "}
+        <Tooltip title="查询计划不是必须的，但强烈推荐用于警报。没有查询计划的警报将仅在用户在您的组织中手动执行此查询时发送通知。">
           <a role="presentation">
             Why it&apos;s recommended <QuestionCircleTwoToneIcon />
           </a>

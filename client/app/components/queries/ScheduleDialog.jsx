@@ -19,6 +19,22 @@ const DATE_FORMAT = "YYYY-MM-DD";
 const HOUR_FORMAT = "HH:mm";
 const { Option, OptGroup } = Select;
 
+// 汉化时间单位标签
+const INTERVAL_LABELS = {
+  minutes: "分钟",
+  hours: "小时",
+  days: "天",
+  weeks: "周",
+};
+// 汉化时间区间内容
+function zhDuration(str) {
+  return str
+    .replace(/(\d+) minutes?/, "$1 分钟")
+    .replace(/(\d+) hours?/, "$1 小时")
+    .replace(/(\d+) days?/, "$1 天")
+    .replace(/(\d+) weeks?/, "$1 周");
+}
+
 export function TimeEditor(props) {
   const [time, setTime] = useState(props.defaultValue);
   const showUtc = time && !time.isUTC();
@@ -199,21 +215,21 @@ class ScheduleDialog extends React.Component {
     } = this.state;
 
     return (
-      <Modal {...dialog.props} title="Refresh Schedule" className="schedule" onOk={() => this.save()}>
+      <Modal {...dialog.props} title="刷新计划" className="schedule" onOk={() => this.save()}>
         <div className="schedule-component">
-          <h5>Refresh every</h5>
+          <h5>刷新频率</h5>
           <div data-testid="interval">
             <Select className="input" value={seconds} onChange={this.setInterval} dropdownMatchSelectWidth={false}>
               <Option value={null} key="never">
-                Never
+                永不
               </Option>
               {Object.keys(this.intervals)
                 .filter(int => !isEmpty(this.intervals[int]))
                 .map(int => (
-                  <OptGroup label={capitalize(pluralize(int))} key={int}>
+                  <OptGroup label={INTERVAL_LABELS[pluralize(int)] || capitalize(pluralize(int))} key={int}>
                     {this.intervals[int].map(([cnt, secs]) => (
                       <Option value={secs} key={`${int}-${cnt}`}>
-                        {durationHumanize(secs)}
+                        {zhDuration(durationHumanize(secs))}
                       </Option>
                     ))}
                   </OptGroup>
@@ -223,7 +239,7 @@ class ScheduleDialog extends React.Component {
         </div>
         {[IntervalEnum.DAYS, IntervalEnum.WEEKS].indexOf(interval) !== -1 ? (
           <div className="schedule-component">
-            <h5>On time</h5>
+            <h5>基于时间</h5>
             <div data-testid="time">
               <TimeEditor
                 defaultValue={
@@ -240,7 +256,7 @@ class ScheduleDialog extends React.Component {
         ) : null}
         {IntervalEnum.WEEKS === interval ? (
           <div className="schedule-component">
-            <h5>On day</h5>
+            <h5>基于星期几</h5>
             <div data-testid="weekday">
               <Radio.Group size="medium" defaultValue={this.state.dayOfWeek} onChange={this.setWeekday}>
                 {WEEKDAYS_SHORT.map(day => (
@@ -254,11 +270,11 @@ class ScheduleDialog extends React.Component {
         ) : null}
         {interval !== IntervalEnum.NEVER ? (
           <div className="schedule-component">
-            <h5>Ends</h5>
+            <h5>结束时间</h5>
             <div className="ends" data-testid="ends">
               <Radio.Group size="medium" value={!!until} onChange={this.setUntilToggle}>
-                <Radio value={false}>Never</Radio>
-                <Radio value>On</Radio>
+                <Radio value={false}>永不结束</Radio>
+                <Radio value>设定时间</Radio>
               </Radio.Group>
               {until ? (
                 <DatePicker

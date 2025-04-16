@@ -77,7 +77,7 @@ export default function QueryExecutionMetadata({
       </span>
       <div>
         <span className="m-r-10">
-          <span className="hidden-xs">Refreshed </span>
+          <span className="hidden-xs">刷新于 </span>
           <strong>
             <TimeAgo date={queryResultData.retrievedAt} placeholder="-" />
           </strong>

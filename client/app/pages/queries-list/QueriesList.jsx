@@ -124,7 +124,7 @@ function QueriesList({ controller }) {
             currentUser.hasPermission("create_query") ? (
               <Link.Button block type="primary" href="queries/new">
                 <i className="fa fa-plus m-r-5" aria-hidden="true" />
-                New Query
+                新建查询
               </Link.Button>
             ) : null
           }
@@ -132,8 +132,8 @@ function QueriesList({ controller }) {
         <Layout>
           <Layout.Sidebar className="m-b-0">
             <Sidebar.SearchInput
-              placeholder="Search Queries..."
-              label="Search queries"
+              placeholder="搜索查询..."
+              label="搜索查询"
               value={controller.searchTerm}
               onChange={controller.updateSearch}
             />

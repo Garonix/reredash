@@ -147,20 +147,20 @@ class QuerySnippetsList extends React.Component {
             onClick={() => this.showSnippetDialog()}
             disabled={!policy.isCreateQuerySnippetEnabled()}>
             <i className="fa fa-plus m-r-5" aria-hidden="true" />
-            New Query Snippet
+            新建查询片段
           </Button>
         </div>
 
         {!controller.isLoaded && <LoadingState className="" />}
         {controller.isLoaded && controller.isEmpty && (
           <div className="text-center">
-            There are no query snippets yet.
+            暂无查询片段
             {policy.isCreateQuerySnippetEnabled() && (
               <div className="m-t-5">
                 <PlainButton type="link" onClick={() => this.showSnippetDialog()}>
-                  Click here
+                  点击这里
                 </PlainButton>{" "}
-                to add one.
+                添加一个。
               </div>
             )}
           </div>

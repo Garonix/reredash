@@ -44,8 +44,8 @@ function TabWithDeleteButton({ visualizationName, canDelete, onDelete, ...props 
       e.stopPropagation();
       Modal.confirm({
         title: "Delete Visualization",
-        content: "Are you sure you want to delete this visualization?",
-        okText: "Delete",
+        content: "确定要删除这个可视化吗？",
+        okText: "删除",
         okType: "danger",
         onOk: onDelete,
         maskClosable: true,
@@ -114,7 +114,7 @@ export default function QueryVisualizationTabs({
         onClick={() => onAddVisualization()}
       >
         <i className="fa fa-plus" aria-hidden="true" />
-        <span className="m-l-5 hidden-xs">Add Visualization</span>
+        <span className="m-l-5 hidden-xs">添加可视化</span>
       </Button>
     );
   }
@@ -143,7 +143,7 @@ export default function QueryVisualizationTabs({
             <TabWithDeleteButton
               data-test={`QueryPageVisualizationTab${visualization.id}`}
               canDelete={!isMobile && canDeleteVisualizations && !isFirstVisualization(visualization.id)}
-              visualizationName={visualization.name}
+              visualizationName={visualization.type === "TABLE" && visualization.name === "Table" ? "查询结果" : visualization.name}
               onDelete={() => onDeleteVisualization(visualization.id)}
             />
           }
@@ -158,11 +158,11 @@ export default function QueryVisualizationTabs({
             />
           ) : (
             <EmptyState
-              title="Query has no result"
+              title="查询没有结果"
               message={
                 canRefresh
-                  ? "Execute/Refresh the query to show results."
-                  : "You do not have a permission to execute/refresh this query."
+                  ? "执行/刷新查询以显示结果。"
+                  : "您没有权限执行/刷新此查询。"
               }
               refreshButton={refreshButton}
             />

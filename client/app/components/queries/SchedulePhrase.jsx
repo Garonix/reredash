@@ -7,6 +7,21 @@ import { RefreshScheduleType, RefreshScheduleDefault } from "../proptypes";
 
 import "./ScheduleDialog.css";
 
+// 汉化英文单位
+function zhDuration(str) {
+  return str
+    .replace(/(\d+) minutes?/g, '$1分钟')
+    .replace(/(\d+) hours?/g, '$1小时')
+    .replace(/(\d+) days?/g, '$1天')
+    .replace(/(\d+) weeks?/g, '$1周')
+    .replace(/(\d+) seconds?/g, '$1秒')
+    .replace(/\bminute\b/, '1分钟')
+    .replace(/\bhour\b/, '1小时')
+    .replace(/\bday\b/, '1天')
+    .replace(/\bweek\b/, '1周')
+    .replace(/\bsecond\b/, '1秒');
+}
+
 export default class SchedulePhrase extends React.Component {
   static propTypes = {
     schedule: RefreshScheduleType,
@@ -24,20 +39,20 @@ export default class SchedulePhrase extends React.Component {
   get content() {
     const { interval: seconds } = this.props.schedule || SchedulePhrase.defaultProps.schedule;
     if (!seconds) {
-      return ["Never"];
+      return ["永不"];
     }
-    const humanized = durationHumanize(seconds, {
+    const humanized = zhDuration(durationHumanize(seconds, {
       omitSingleValueNumber: true,
-    });
-    const short = `Every ${humanized}`;
-    let full = `Refreshes every ${humanized}`;
+    }));
+    const short = `每${humanized}`;
+    let full = `每${humanized}刷新`;
 
     const { time, day_of_week: dayOfWeek } = this.props.schedule;
     if (time) {
-      full += ` at ${localizeTime(time)}`;
+      full += `，时间 ${localizeTime(time)}`;
     }
     if (dayOfWeek) {
-      full += ` on ${dayOfWeek}`;
+      full += `，星期${dayOfWeek}`;
     }
 
     return [short, full];
@@ -45,7 +60,7 @@ export default class SchedulePhrase extends React.Component {
 
   render() {
     if (this.props.isNew) {
-      return "Never";
+      return "永不";
     }
 
     const [short, full] = this.content;

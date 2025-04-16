@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import { Moment } from "@/components/proptypes";
 import { clientConfig } from "@/services/auth";
 import Tooltip from "@/components/Tooltip";
+import "moment/locale/zh-cn";
+moment.locale("zh-cn");
 
 function toMoment(value) {
   value = !isNil(value) ? moment(value) : null;
