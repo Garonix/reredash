@@ -26,7 +26,7 @@
     "test:watch": "jest --watch",
     "cypress": "node client/cypress/cypress.js",
     "preinstall": "cd viz-lib && yarn link --link-folder ../.yarn",
-    "postinstall": "(cd viz-lib && yarn --frozen-lockfile && yarn build:babel) && yarn link --link-folder ./.yarn @redash/viz"
+    "postinstall": "(cd viz-lib && yarn --frozen-lockfile && yarn build:babel) && yarn link --link-folder ./.yarn @redash/viz && patch-package"
   },
   "repository": {
     "type": "git",
@@ -138,6 +138,8 @@
     "mini-css-extract-plugin": "^1.6.2",
     "mockdate": "^2.0.2",
     "npm-run-all": "^4.1.5",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^1.19.1",
     "raw-loader": "^0.5.1",
     "react-refresh": "^0.14.0",

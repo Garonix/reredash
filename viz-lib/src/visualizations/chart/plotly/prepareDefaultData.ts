@@ -140,6 +140,7 @@ function prepareSeries(series: any, options: any, numSeries: any, additionalOpti
     },
     yaxis: seriesYAxis,
     sourceData,
+    line: { shape: "spline" }, // 关键：让plotly渲染为平滑曲线
   };
 
   additionalOptions = { ...additionalOptions, seriesColor, data };
@@ -148,6 +149,11 @@ function prepareSeries(series: any, options: any, numSeries: any, additionalOpti
     case "column":
       return prepareBarSeries(plotlySeries, options, additionalOptions);
     case "line":
+      // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 3.
+      return prepareLineSeries(plotlySeries, options, additionalOptions);
+    case "spline":
+      plotlySeries.line = { shape: "spline" }; // 让plotly渲染为平滑曲线
+      // 复用折线图逻辑
       // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 3.
       return prepareLineSeries(plotlySeries, options, additionalOptions);
     case "area":

@@ -4,13 +4,14 @@ import { Select } from "@/components/visualizations/editor";
 import { visualizationsSettings } from "@/visualizations/visualizationsSettings";
 
 const allChartTypes = [
-  { type: "line", name: "Line", icon: "line-chart" },
-  { type: "column", name: "Bar", icon: "bar-chart" },
-  { type: "area", name: "Area", icon: "area-chart" },
-  { type: "pie", name: "Pie", icon: "pie-chart" },
-  { type: "scatter", name: "Scatter", icon: "circle-o" },
-  { type: "bubble", name: "Bubble", icon: "circle-o" },
-  { type: "heatmap", name: "Heatmap", icon: "th" },
+  { type: "line", name: "折线图", icon: "line-chart" },
+  { type: "spline", name: "曲线图", icon: "line-chart" },
+  { type: "column", name: "柱状图", icon: "bar-chart" },
+  { type: "area", name: "面积图", icon: "area-chart" },
+  { type: "pie", name: "饼图", icon: "pie-chart" },
+  { type: "scatter", name: "散点图", icon: "circle-o" },
+  { type: "bubble", name: "气泡图", icon: "circle-o" },
+  { type: "heatmap", name: "热力图", icon: "th" },
   { type: "box", name: "Box", icon: "square-o" },
 ];
 
