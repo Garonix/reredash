@@ -100,31 +100,31 @@ export default function QueryPageHeader({
         {
           archive: {
             isAvailable: !queryFlags.isNew && queryFlags.canEdit && !queryFlags.isArchived,
-            title: "Archive",
+            title: "归档",
             onClick: archiveQuery,
           },
           managePermissions: {
             isAvailable:
               !queryFlags.isNew && queryFlags.canEdit && !queryFlags.isArchived && clientConfig.showPermissionsControl,
-            title: "Manage Permissions",
+            title: "管理权限",
             onClick: openPermissionsEditorDialog,
           },
           publish: {
             isAvailable:
               !isDesktop && queryFlags.isDraft && !queryFlags.isArchived && !queryFlags.isNew && queryFlags.canEdit,
-            title: "Publish",
+            title: "发布",
             onClick: publishQuery,
           },
           unpublish: {
             isAvailable: !clientConfig.disablePublish && !queryFlags.isNew && queryFlags.canEdit && !queryFlags.isDraft,
-            title: "Unpublish",
+            title: "未发布",
             onClick: unpublishQuery,
           },
         },
         {
           showAPIKey: {
             isAvailable: !clientConfig.disablePublicUrls && !queryFlags.isNew,
-            title: "Show API Key",
+            title: "显示 API Key",
             onClick: openApiKeyDialog,
           },
         },
@@ -182,7 +182,7 @@ export default function QueryPageHeader({
             {!sourceMode && (
               <Link.Button className="m-r-5" href={query.getUrl(true, selectedVisualization)}>
                 <i className="fa fa-pencil-square-o" aria-hidden="true" />
-                <span className="m-l-5">Edit Source</span>
+                <span className="m-l-5">编辑查询语句</span>
               </Link.Button>
             )}
             {sourceMode && (
@@ -191,7 +191,7 @@ export default function QueryPageHeader({
                 href={query.getUrl(false, selectedVisualization)}
                 data-test="QueryPageShowResultOnly">
                 <i className="fa fa-table" aria-hidden="true" />
-                <span className="m-l-5">Show Results Only</span>
+                <span className="m-l-5">仅显示结果</span>
               </Link.Button>
             )}
           </span>

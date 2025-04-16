@@ -286,9 +286,9 @@ class Prometheus(BaseQueryRunner):
                 date_now = self._get_datetime_now()
                 payload.update({"end": [date_now]})
             
-            # 如果没有step,则使用5分钟作为step
+            # 如果没有step,则使用1秒钟作为step
             if query_type == "query_range" and "step" not in payload.keys():
-                payload.update({"step": ["5m"]})
+                payload.update({"step": ["1s"]})
 
             convert_query_range(payload)
 

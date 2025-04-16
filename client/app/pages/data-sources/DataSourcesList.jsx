@@ -27,13 +27,13 @@ export function DataSourcesListComponent({ dataSources, onClickCreate }) {
 
   return isEmpty(dataSources) ? (
     <div className="text-center">
-      There are no data sources yet.
+      暂无数据源
       {policy.isCreateDataSourceEnabled() && (
         <div className="m-t-5">
           <PlainButton type="link" onClick={onClickCreate} data-test="CreateDataSourceLink">
-            Click here
+            点击这里
           </PlainButton>{" "}
-          to add one.
+          添加数据源
         </div>
       )}
     </div>
