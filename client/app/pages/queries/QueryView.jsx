@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 import useMedia from "use-media";
 import Button from "antd/lib/button";
+import Select from "antd/lib/select";
+import DatePicker from "antd/lib/date-picker";
+import moment from "moment";
 
 import FullscreenOutlinedIcon from "@ant-design/icons/FullscreenOutlined";
 import FullscreenExitOutlinedIcon from "@ant-design/icons/FullscreenExitOutlined";
@@ -50,6 +53,37 @@ function QueryView(props) {
   const isFixedLayout = useMedia({ minHeight: 500 }) && isDesktop;
   const [fullscreen, toggleFullscreen] = useFullscreenHandler(isDesktop);
   const [addingDescription, setAddingDescription] = useState(false);
+
+  // 时间段和结束时间状态
+  const [duration, setDuration] = useState("1h"); // 默认1小时
+  const [endTime, setEndTime] = useState(moment()); // 默认当前时间
+
+  // 参数变更处理
+  function handleParametersChange(newParams) {
+    updateParametersDirtyFlag(true);
+    // 这里直接刷新查询
+    doExecuteQuery();
+  }
+
+  // 控件变化后，生成新参数并触发 handleParametersChange
+  function refreshParameters(durationValue, endValue) {
+    const endMoment = endValue || moment();
+    let startMoment = endMoment.clone().subtract(moment.duration(durationValue));
+    handleParametersChange({
+      ...parameters,
+      start: startMoment.toISOString(),
+      end: endMoment.toISOString(),
+    });
+  }
+
+  function onDurationChange(value) {
+    setDuration(value);
+    refreshParameters(value, endTime);
+  }
+  function onEndTimeChange(value) {
+    setEndTime(value);
+    refreshParameters(duration, value);
+  }
 
   const {
     queryResult,
@@ -104,19 +138,41 @@ function QueryView(props) {
           dataSource={dataSource}
           onChange={setQuery}
           selectedVisualization={selectedVisualization}
+          parameters={parameters}
+          onParametersChange={handleParametersChange}
           headerExtra={
-            <DynamicComponent name="QueryView.HeaderExtra" query={query}>
-              {policy.canRun(query) && (
-                <QueryViewButton
-                  className="m-r-5"
-                  type="primary"
-                  shortcut="mod+enter, alt+enter, ctrl+enter"
-                  disabled={!queryFlags.canExecute || isExecuting || areParametersDirty}
-                  onClick={doExecuteQuery}>
-                  Refresh
-                </QueryViewButton>
-              )}
-            </DynamicComponent>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginRight: 12 }}>
+              <Select value={duration} onChange={onDurationChange} style={{ width: 120 }} size="small">
+                <Select.Option value="1m">1分钟</Select.Option>
+                <Select.Option value="5m">5分钟</Select.Option>
+                <Select.Option value="15m">15分钟</Select.Option>
+                <Select.Option value="30m">30分钟</Select.Option>
+                <Select.Option value="1h">1小时</Select.Option>
+                <Select.Option value="6h">6小时</Select.Option>
+                <Select.Option value="12h">12小时</Select.Option>
+                <Select.Option value="24h">24小时</Select.Option>
+              </Select>
+              <DatePicker
+                showTime
+                value={endTime}
+                onChange={onEndTimeChange}
+                style={{ width: 180 }}
+                size="small"
+              />
+              <DynamicComponent name="QueryView.HeaderExtra" query={query}>
+                {policy.canRun(query) && (
+                  <QueryViewButton
+                    className="m-r-5"
+                    type="primary"
+                    shortcut="mod+enter, alt+enter, ctrl+enter"
+                    disabled={!queryFlags.canExecute || isExecuting || areParametersDirty}
+                    onClick={doExecuteQuery}
+                  >
+                    刷新
+                  </QueryViewButton>
+                )}
+              </DynamicComponent>
+            </div>
           }
           tagsExtra={
             !query.description &&

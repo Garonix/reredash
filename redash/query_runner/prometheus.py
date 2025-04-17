@@ -276,16 +276,16 @@ class Prometheus(BaseQueryRunner):
 
             # # 强制使用query_range
             # query_type = "query_range"
+            # 如果没有end,则使用当前时间作为end
+            if "end" not in payload.keys() or "now" in payload["end"]:
+                date_now = self._get_datetime_now()
+                payload.update({"end": [date_now]})
+
             # 如果没有start,则使用当前时间前1小时作为start
             if "start" not in payload.keys():
                 date_now = self._get_datetime_now()
                 payload.update({"start": [date_now - timedelta(hours=1)]})
 
-            # 如果没有end,则使用当前时间作为end
-            if "end" not in payload.keys() or "now" in payload["end"]:
-                date_now = self._get_datetime_now()
-                payload.update({"end": [date_now]})
-            
             # 如果没有step,则使用1秒钟作为step
             if "step" not in payload.keys():
                 payload.update({"step": ["1s"]})
