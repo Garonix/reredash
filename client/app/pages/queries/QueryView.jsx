@@ -65,6 +65,12 @@ function QueryView(props) {
 
   const queryResultData = useQueryResultData(queryResult);
 
+  // 测试用，监听 queryResultData 变化
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("[测试] queryResult 变化：", queryResult);
+  }, [queryResult]);
+
   const updateQueryDescription = useUpdateQueryDescription(query, setQuery);
   const editSchedule = useEditScheduleDialog(query, setQuery);
   const addVisualization = useEditVisualizationDialog(query, queryResult, (newQuery, visualization) => {

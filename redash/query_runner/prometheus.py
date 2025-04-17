@@ -69,7 +69,7 @@ def get_range_rows(metrics_data):
     return rows
 
 
-# Convert datetime string to timestamp
+# 将 datetime 字符串转换为时间戳
 def convert_query_range(payload):
     """
     转换查询参数中的时间范围，将 datetime 字符串转换为时间戳
@@ -84,7 +84,7 @@ def convert_query_range(payload):
         value = payload[key][0]
 
         if isinstance(value, str):
-            # Don't convert timestamp string
+            # 如果是时间戳字符串则不转换
             try:
                 int(value)
                 continue
@@ -168,7 +168,7 @@ class Prometheus(BaseQueryRunner):
         配置 schema
         :return: 配置 schema
         """
-        # files has to end with "File" in name
+        # 文件名必须以 "File" 结尾
         return {
             "type": "object",
             "properties": {
@@ -242,18 +242,18 @@ class Prometheus(BaseQueryRunner):
         :return: 查询结果
         """
         """
-        Query Syntax, actually it is the URL query string.
-        Check the Prometheus HTTP API for the details of the supported query string.
+        查询语法，实际就是URL查询字符串。
+        具体支持的查询参数请参考 Prometheus HTTP API 文档。
 
         https://prometheus.io/docs/prometheus/latest/querying/api/
 
-        example: instant query
+        示例：即时查询
             query=http_requests_total
 
-        example: range query
+        示例：范围查询
             query=http_requests_total&start=2018-01-20T00:00:00.000Z&end=2018-01-25T00:00:00.000Z&step=60s
 
-        example: until now range query
+        示例：直到当前的范围查询
             query=http_requests_total&start=2018-01-20T00:00:00.000Z&step=60s
             query=http_requests_total&start=2018-01-20T00:00:00.000Z&end=now&step=60s
         """
@@ -267,11 +267,11 @@ class Prometheus(BaseQueryRunner):
         print("DEBUG: run_query called")
         try:
             error = None
-            # for backward compatibility
+            # 为了兼容旧版本
             query = "query={}".format(query) if not query.startswith("query=") else query
 
             payload = parse_qs(query)
-            # Determine initial query type based on 'step' parameter for API endpoint selection
+            # 根据 step 参数判断API端点类型
             # query_type = "query_range" if "step" in payload.keys() else "query"
 
             # 强制使用query_range
@@ -304,19 +304,19 @@ class Prometheus(BaseQueryRunner):
             if len(metrics) == 0:
                 return None, "查询结果为空."
 
-            # Determine how to parse rows based on the structure of the first metric result
+            # 根据第一个metric结果结构判断如何解析数据行
             first_metric = metrics[0]
             if "values" in first_metric:
-                # Result contains time series data ("values")
+                # 结果包含时序数据（"values"）
                 rows = get_range_rows(metrics)
             elif "value" in first_metric:
-                # Result contains single point data ("value")
+                # 结果包含单点数据（"value"）
                 rows = get_instant_rows(metrics)
             else:
-                # Handle unexpected result format if necessary
-                return None, "Unknown Prometheus result format encountered."
+                # 如遇未知结果格式可在此处理
+                return None, "未知的 Prometheus 结果格式。"
 
-            # Extract labels from the first metric
+            # 从第一个metric中提取标签字段
             metric_labels = first_metric.get("metric", {}).keys()
 
             for label_name in metric_labels:
@@ -328,7 +328,7 @@ class Prometheus(BaseQueryRunner):
                     }
                 )
 
-            data = {"rows": rows, "columns": columns}
+            data = {"rows": rows, "columns": columns, "query_type": query_type}
 
         except requests.RequestException as e:
             return None, str(e)
