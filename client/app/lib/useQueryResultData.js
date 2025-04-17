@@ -14,6 +14,7 @@ function getQueryResultData(queryResult, queryResultStatus = null) {
     error: invoke(queryResult, "getError") || null,
     runtime: invoke(queryResult, "getRuntime") || null,
     metadata: get(queryResult, "query_result.data.metadata", {}),
+    query_type: get(queryResult, "query_result.data.query_type", null),
   };
 }
 

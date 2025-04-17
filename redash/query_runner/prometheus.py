@@ -272,27 +272,27 @@ class Prometheus(BaseQueryRunner):
 
             payload = parse_qs(query)
             # 根据 step 参数判断API端点类型
-            # query_type = "query_range" if "step" in payload.keys() else "query"
+            query_type = "query_range" if "step" in payload.keys() else "query"
 
-            # 强制使用query_range
-            query_type = "query_range"
+            # # 强制使用query_range
+            # query_type = "query_range"
             # 如果没有start,则使用当前时间前1小时作为start
-            if query_type == "query_range" and "start" not in payload.keys():
+            if "start" not in payload.keys():
                 date_now = self._get_datetime_now()
                 payload.update({"start": [date_now - timedelta(hours=1)]})
 
             # 如果没有end,则使用当前时间作为end
-            if query_type == "query_range" and ("end" not in payload.keys() or "now" in payload["end"]):
+            if "end" not in payload.keys() or "now" in payload["end"]:
                 date_now = self._get_datetime_now()
                 payload.update({"end": [date_now]})
             
             # 如果没有step,则使用1秒钟作为step
-            if query_type == "query_range" and "step" not in payload.keys():
+            if "step" not in payload.keys():
                 payload.update({"step": ["1s"]})
 
             convert_query_range(payload)
-
-            api_endpoint = base_url + "/api/v1/{}".format(query_type)
+            # 强制使用query_range查询
+            api_endpoint = base_url + "/api/v1/query_range"
 
             promehteus_kwargs = self._get_prometheus_kwargs()
 

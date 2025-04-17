@@ -61,12 +61,16 @@ export default function VisualizationRenderer(props) {
     handleFiltersChange(combineFilters(filtersRef.current, props.filters));
   }, [props.filters, handleFiltersChange]);
 
+  const queryType = data.query_type;
+  const isTable = props.visualization.type === "TABLE";
   const filteredData = useMemo(
     () => ({
       columns: data.columns,
-      rows: filterData(data.rows, filters),
+      rows: isTable && queryType === "query"
+        ? filterData(data.rows, filters).slice(-1)
+        : filterData(data.rows, filters),
     }),
-    [data, filters]
+    [data, filters, isTable, queryType]
   );
 
   const { showFilters, visualization } = props;
