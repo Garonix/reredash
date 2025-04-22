@@ -26,6 +26,7 @@ from redash.query_runner import (
     register,
 )
 
+import logging
 
 def get_instant_rows(metrics_data):
     """
@@ -264,18 +265,15 @@ class Prometheus(BaseQueryRunner):
             {"friendly_name": "value", "type": TYPE_STRING, "name": "value"},
         ]
         promehteus_kwargs = {}
-        print("DEBUG: run_query called")
         try:
             error = None
             # 为了兼容旧版本
             query = "query={}".format(query) if not query.startswith("query=") else query
-
+            print('===================真正的query=================', query, flush=True)
+            logging.warning('prometheus.py收到的query参数: %s', query)
             payload = parse_qs(query)
             # 根据 step 参数判断API端点类型
             query_type = "query_range" if "step" in payload.keys() else "query"
-
-            # # 强制使用query_range
-            # query_type = "query_range"
             # 如果没有end,则使用当前时间作为end
             if "end" not in payload.keys() or "now" in payload["end"]:
                 date_now = self._get_datetime_now()
@@ -289,10 +287,12 @@ class Prometheus(BaseQueryRunner):
             # 如果没有step,则使用1秒钟作为step
             if "step" not in payload.keys():
                 payload.update({"step": ["1s"]})
-
+            print('===================payload=================', payload, flush=True)
             convert_query_range(payload)
             # 强制使用query_range查询
             api_endpoint = base_url + "/api/v1/query_range"
+            print('===================api_endpoint=================', api_endpoint, flush=True)
+            # logging.warning('prometheus.py使用的api_endpoint: %s', api_endpoint)
 
             promehteus_kwargs = self._get_prometheus_kwargs()
 

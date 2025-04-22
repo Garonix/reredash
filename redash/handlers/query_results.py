@@ -1,5 +1,5 @@
 import unicodedata
-from urllib.parse import quote
+from urllib.parse import quote, urlparse, parse_qs, urlencode, urlunparse
 
 import regex
 from flask import make_response, request
@@ -56,7 +56,7 @@ error_messages = {
 }
 
 
-def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, max_age=0):
+def run_query(query, parameters, data_source, query_id, should_apply_auto_limit, max_age=0, query_start=None, query_end=None):
     if not data_source:
         return error_messages["no_data_source"]
 
@@ -74,13 +74,25 @@ def run_query(query, parameters, data_source, query_id, should_apply_auto_limit,
         abort(400, message=str(e))
 
     query_text = data_source.query_runner.apply_auto_limit(query.text, should_apply_auto_limit)
+    print('===================query_text=================', query_text)
+    if query_start or query_end:
+        # 使用&分割query_text
+        new_query_text = query_text.split("&")[0]
+        print('===================new_query_text=================', new_query_text)
+        new_query_text += f"&start={query_start}"
+        new_query_text += f"&end={query_end}"
+        query_text = new_query_text
+    
+    print('===================new_query=================', query_text)
 
     if query.missing_params:
         return error_response("缺少参数值: {}".format(", ".join(query.missing_params)))
 
+    # 在调用 get_latest 前打印 query_text，追踪参数流向
     if max_age == 0:
         query_result = None
     else:
+        print('===================before_get_latest_query_text=================', query_text, flush=True)
         query_result = models.QueryResult.get_latest(data_source, query_text, max_age)
 
     record_event(
@@ -246,6 +258,11 @@ class QueryResultResource(BaseResource):
         params = request.get_json(force=True, silent=True) or {}
         parameter_values = params.get("parameters", {})
 
+        start = params.get("start")
+        end = params.get("end")
+        # 现在 start 和 end 就是你前端传来的时间字符串
+        print("=================start=================:", start)
+        print("=================end=================:", end)
         max_age = params.get("max_age", -1)
         # max_age might have the value of None, in which case calling int(None) will fail
         if max_age is None:
@@ -268,6 +285,8 @@ class QueryResultResource(BaseResource):
                 query_id,
                 should_apply_auto_limit,
                 max_age,
+                query_start=start,
+                query_end=end,
             )
         else:
             if not query.parameterized.is_safe:

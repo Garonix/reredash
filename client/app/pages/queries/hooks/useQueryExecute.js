@@ -37,12 +37,12 @@ export default function useQueryExecute(query) {
     };
   }, []);
 
-  const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
+  const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor, extraOptions = {}) => {
     let newQueryResult;
     if (queryExecutor) {
       newQueryResult = queryExecutor();
     } else {
-      newQueryResult = query.getQueryResult(maxAge);
+      newQueryResult = query.getQueryResult(maxAge, extraOptions);
     }
 
     recordEvent("execute", "query", query.id);

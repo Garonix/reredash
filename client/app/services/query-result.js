@@ -446,11 +446,20 @@ class QueryResult {
     return `${queryName.replace(/ /g, "_") + moment(this.getUpdatedAt()).format("_YYYY_MM_DD")}.${fileType}`;
   }
 
-  static getByQueryId(id, parameters, applyAutoLimit, maxAge) {
+  static getByQueryId(id, parameters, applyAutoLimit, maxAge, extraParams = {}) {
     const queryResult = new QueryResult();
 
+    // 合并参数，允许自定义字段
+    const postData = {
+      id,
+      parameters,
+      apply_auto_limit: applyAutoLimit,
+      max_age: maxAge,
+      ...extraParams, // 允许自定义start、end等字段
+    };
+
     axios
-      .post(`api/queries/${id}/results`, { id, parameters, apply_auto_limit: applyAutoLimit, max_age: maxAge })
+      .post(`api/queries/${id}/results`, postData)
       .then(response => {
         queryResult.update(response);
 
