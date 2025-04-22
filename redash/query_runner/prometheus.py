@@ -272,22 +272,42 @@ class Prometheus(BaseQueryRunner):
             print('===================真正的query=================', query, flush=True)
             logging.warning('prometheus.py收到的query参数: %s', query)
             payload = parse_qs(query)
+            print('===================payload=================', payload, flush=True)
             # 根据 step 参数判断API端点类型
             query_type = "query_range" if "step" in payload.keys() else "query"
             # 如果没有end,则使用当前时间作为end
             if "end" not in payload.keys() or "now" in payload["end"]:
                 date_now = self._get_datetime_now()
-                payload.update({"end": [date_now]})
+                # 转换成 ISO 8601 格式
+                payload.update({"end": [date_now.isoformat()]})
+                print('===================end=================', payload["end"], flush=True)
 
             # 如果没有start,则使用当前时间前1小时作为start
             if "start" not in payload.keys():
                 date_now = self._get_datetime_now()
-                payload.update({"start": [date_now - timedelta(hours=1)]})
+                payload.update({"start": [(date_now - timedelta(hours=1)).isoformat()]})
+                print('===================start=================', payload["start"], flush=True)
 
-            # 如果没有step,则使用1秒钟作为step
+            from datetime import datetime
+            def parse_time(val):
+                # 只支持整数秒时间戳
+                return int(datetime.fromisoformat(val.replace('Z', '+00:00')).timestamp())
+
+            start_dt = parse_time(payload["start"][0])
+            end_dt = parse_time(payload["end"][0])
+            duration = end_dt - start_dt
+            # 智能步长算法，保证数据点不过多且步长合理
+            def suggest_prometheus_step(duration, max_points=5000):
+                # 常见步长秒数
+                common_steps = [1, 2, 5, 10, 15, 30, 60, 300, 900, 1800, 3600]
+                min_step = max(1, int(duration / max_points))
+                step = next((s for s in common_steps if s >= min_step), common_steps[-1])
+                return step
+
             if "step" not in payload.keys():
-                payload.update({"step": ["1s"]})
-            print('===================payload=================', payload, flush=True)
+                step = suggest_prometheus_step(duration)
+                payload.update({"step": [f"{step}s"]})
+            
             convert_query_range(payload)
             # 强制使用query_range查询
             api_endpoint = base_url + "/api/v1/query_range"
