@@ -127,6 +127,20 @@ function QueryView(props) {
     refreshParameters(newParams?.duration || duration, newParams?.endTime || endTime);
   }
 
+  // -------------------- 横坐标范围变动自动查询 --------------------
+  const onXAxisRangeChange = useCallback((start, end) => {
+    // 现在 start, end 已经是 ISO 字符串，无需再格式化
+    console.log("[queryview] x轴范围变动:", start, end);
+    doExecuteQuery({ start, end }, true);
+  }, [doExecuteQuery]);
+
+  useEffect(() => {
+    window.onXAxisRangeChange = onXAxisRangeChange;
+    return () => {
+      window.onXAxisRangeChange = undefined;
+    };
+  }, [onXAxisRangeChange]);
+
   // -------------------- 渲染 --------------------
   return (
     <div

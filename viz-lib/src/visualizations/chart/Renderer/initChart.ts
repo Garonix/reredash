@@ -114,6 +114,20 @@ export default function initChart(container: any, options: any, data: any, addit
             }
           })
         );
+        container.on(
+          "plotly_relayout",
+          createSafeFunction((event: any) => {
+            // 只要有x轴范围，统一转为ISO字符串传递
+            if (event && (event["xaxis.range[0]"] !== undefined || event["xaxis.range[1]"] !== undefined)) {
+              const startISO = event["xaxis.range[0]"] ? new Date(event["xaxis.range[0]"]).toISOString() : undefined;
+              const endISO = event["xaxis.range[1]"] ? new Date(event["xaxis.range[1]"]).toISOString() : undefined;
+              console.log("[Plotly] x轴范围:", startISO, endISO);
+              if (typeof window.onXAxisRangeChange === 'function') {
+                window.onXAxisRangeChange(startISO, endISO);
+              }
+            }
+          })
+        );
         options.onHover && container.on("plotly_hover", options.onHover);
         options.onUnHover && container.on("plotly_unhover", options.onUnHover);
         container.on('plotly_click',
@@ -138,7 +152,6 @@ export default function initChart(container: any, options: any, data: any, addit
               }
             }
           }));
-
         unwatchResize = resizeObserver(
           container,
           createSafeFunction(() => {
