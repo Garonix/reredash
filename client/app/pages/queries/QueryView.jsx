@@ -44,6 +44,7 @@ import useFullscreenHandler from "../../lib/hooks/useFullscreenHandler";
 import "./QueryView.less";
 
 function QueryView(props) {
+  // -------------------- State & Hooks --------------------
   const [query, setQuery] = useState(props.query);
   const [dataSource, setDataSource] = useState();
   const queryFlags = useQueryFlags(query, dataSource);
@@ -58,25 +59,7 @@ function QueryView(props) {
   const [duration, setDuration] = useState("PT1H"); // 默认1小时
   const [endTime, setEndTime] = useState(moment().utc()); // 默认当前时间
 
-  // 控件变化后，生成新参数并触发 handleParametersChange
-  function refreshParameters(durationValue, endValue) {
-    const endMoment = endValue || moment();
-    let startMoment = endMoment.clone().subtract(moment.duration(durationValue));
-
-    // 获取当前所有参数的值（普通对象）
-    // 通过 doExecuteQuery 统一走查询链路，传递额外参数
-    doExecuteQuery({ start: startMoment.toISOString(), end: endMoment.toISOString() });
-  }
-
-  function onDurationChange(value) {
-    setDuration(value);
-    refreshParameters(value, endTime);
-  }
-  function onEndTimeChange(value) {
-    setEndTime(value);
-    refreshParameters(duration, value);
-  }
-
+  // -------------------- 查询执行相关 --------------------
   const {
     queryResult,
     loadedInitialResults,
@@ -88,9 +71,9 @@ function QueryView(props) {
     isCancelling: isExecutionCancelling,
     updatedAt,
   } = useQueryExecute(query);
-
   const queryResultData = useQueryResultData(queryResult);
 
+  // -------------------- 业务逻辑 Hooks --------------------
   const updateQueryDescription = useUpdateQueryDescription(query, setQuery);
   const editSchedule = useEditScheduleDialog(query, setQuery);
   const addVisualization = useEditVisualizationDialog(query, queryResult, (newQuery, visualization) => {
@@ -100,6 +83,7 @@ function QueryView(props) {
   const editVisualization = useEditVisualizationDialog(query, queryResult, newQuery => setQuery(newQuery));
   const deleteVisualization = useDeleteVisualization(query, setQuery);
 
+  // -------------------- 查询执行封装 --------------------
   const doExecuteQuery = useCallback(
     (extraOptions = {}, skipParametersDirtyFlag = false) => {
       if (!queryFlags.canExecute || (!skipParametersDirtyFlag && (areParametersDirty || isExecuting))) {
@@ -110,6 +94,7 @@ function QueryView(props) {
     [areParametersDirty, executeQuery, isExecuting, queryFlags.canExecute]
   );
 
+  // -------------------- 其他处理 --------------------
   useEffect(() => {
     document.title = query.name;
   }, [query.name]);
@@ -118,20 +103,38 @@ function QueryView(props) {
     DataSource.get({ id: query.data_source_id }).then(setDataSource);
   }, [query.data_source_id]);
 
+  // -------------------- 参数与查询联动 --------------------
+  function refreshParameters(durationValue, endValue) {
+    // 每次刷新前，endTime 都取当前最新时间
+    const endMoment = moment().utc();
+    let startMoment = endMoment.clone().subtract(moment.duration(durationValue));
+    setEndTime(endMoment); // 同步更新state
+    doExecuteQuery({ start: startMoment.toISOString(), end: endMoment.toISOString() }, true);
+  }
+
+  function onDurationChange(value) {
+    setDuration(value);
+    refreshParameters(value, endTime);
+  }
+  function onEndTimeChange(value) {
+    setEndTime(value);
+    refreshParameters(duration, value);
+  }
+
   // 参数变更处理
   function handleParametersChange(newParams) {
-    updateParametersDirtyFlag(true);
-    // 统一通过 refreshParameters 处理参数变更和查询
-    // 假设 newParams 里有 duration 和 endTime，可根据实际需要调整
+    updateParametersDirtyFlag(false);
     refreshParameters(newParams?.duration || duration, newParams?.endTime || endTime);
   }
 
+  // -------------------- 渲染 --------------------
   return (
     <div
       className={cx("query-page-wrapper", {
         "query-view-fullscreen": fullscreen,
         "query-fixed-layout": isFixedLayout,
-      })}>
+      })}
+    >
       <div className="container w-100">
         <QueryPageHeader
           query={query}
@@ -139,10 +142,7 @@ function QueryView(props) {
           onChange={setQuery}
           selectedVisualization={selectedVisualization}
           parameters={parameters}
-          onParametersChange={(newParams) => {
-            // 直接刷新参数，统一走 refreshParameters
-            refreshParameters(duration, endTime);
-          }}
+          onParametersChange={() => refreshParameters(duration, endTime)}
           headerExtra={
             <div style={{ display: "flex", gap: 8, alignItems: "center", marginRight: 12 }}>
               <Select value={duration} onChange={onDurationChange} style={{ width: 120 }} size="small">
@@ -151,9 +151,11 @@ function QueryView(props) {
                 <Select.Option value="PT15M">15分钟</Select.Option>
                 <Select.Option value="PT30M">30分钟</Select.Option>
                 <Select.Option value="PT1H">1小时</Select.Option>
+                <Select.Option value="PT2H">2小时</Select.Option>
+                <Select.Option value="PT3H">3小时</Select.Option>
                 <Select.Option value="PT6H">6小时</Select.Option>
                 <Select.Option value="PT12H">12小时</Select.Option>
-                <Select.Option value="P1D">24小时</Select.Option>
+                <Select.Option value="P1D">1天</Select.Option>
               </Select>
               <DatePicker
                 showTime
