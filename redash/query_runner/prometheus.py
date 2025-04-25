@@ -297,9 +297,9 @@ class Prometheus(BaseQueryRunner):
             end_dt = parse_time(payload["end"][0])
             duration = end_dt - start_dt
             # 智能步长算法，保证数据点不过多且步长合理
-            def suggest_prometheus_step(duration, max_points=5000):
+            def suggest_prometheus_step(duration, max_points=2000):
                 # 常见步长秒数
-                common_steps = [1, 2, 5, 10, 15, 30, 60, 300, 900, 1800, 3600]
+                common_steps = [1, 10, 30, 60, 300, 900, 1800, 3600]
                 min_step = max(1, int(duration / max_points))
                 step = next((s for s in common_steps if s >= min_step), common_steps[-1])
                 return step
