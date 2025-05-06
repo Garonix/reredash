@@ -72,6 +72,21 @@ export default function initChart(container: any, options: any, data: any, addit
   const plotlyData = prepareData(data, options);
   const plotlyLayout = prepareLayout(container, options, plotlyData);
 
+  // 修改padding
+  // plotlyLayout.margin = {
+  //   ...(plotlyLayout.margin || {}),
+  //   l: 10, // 左侧padding
+  //   r: 10, // 右侧padding
+  // };
+
+  const xValues = plotlyData[0]?.x || [];
+  if (xValues.length > 0) {
+    plotlyLayout.xaxis = {
+      ...(plotlyLayout.xaxis || {}),
+      range: [xValues[0], xValues[xValues.length - 1]], // 让x轴严格贴合数据
+    };
+  }
+
   let isDestroyed = false;
 
   let updater = initPlotUpdater();
