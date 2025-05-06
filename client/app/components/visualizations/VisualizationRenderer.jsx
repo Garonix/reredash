@@ -6,6 +6,7 @@ import useImmutableCallback from "@/lib/hooks/useImmutableCallback";
 import Filters, { FiltersType, filterData } from "@/components/Filters";
 import { VisualizationType } from "@redash/viz/lib";
 import { Renderer } from "@/components/visualizations/visualizationComponents";
+import moment from "moment";
 
 function combineFilters(localFilters, globalFilters) {
   // tiny optimization - to avoid unnecessary updates
@@ -63,15 +64,31 @@ export default function VisualizationRenderer(props) {
 
   const queryType = data.query_type;
   const isTable = props.visualization.type === "TABLE";
-  const filteredData = useMemo(
-    () => ({
-      columns: data.columns,
-      rows: isTable && queryType === "query"
-        ? filterData(data.rows, filters).slice(-1)
-        : filterData(data.rows, filters),
-    }),
-    [data, filters, isTable, queryType]
-  );
+
+const CST_TIME_FIELDS = ["timestamp", "date", "time"]; // 你实际的时间字段名，按需调整
+
+const filteredData = useMemo(() => {
+  const rows = isTable && queryType === "query"
+    ? filterData(data.rows, filters).slice(-1)
+    : filterData(data.rows, filters);
+
+  // 转换时间字段为CST
+  const cstRows = rows.map(row => {
+    const newRow = { ...row };
+    CST_TIME_FIELDS.forEach(field => {
+      if (newRow[field]) {
+        // 保持原格式或按需格式化
+        newRow[field] = moment.utc(newRow[field]).utcOffset(8).format("YYYY-MM-DD HH:mm:ss");
+      }
+    });
+    return newRow;
+  });
+
+  return {
+    columns: data.columns,
+    rows: cstRows,
+  };
+}, [data, filters, isTable, queryType]);
 
   const { showFilters, visualization } = props;
 

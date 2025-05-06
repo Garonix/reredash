@@ -44,8 +44,8 @@ EXPOSE 5000
 RUN useradd --create-home redash
 
 # Ubuntu packages
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+RUN http_proxy=http://192.168.3.2:11088 https_proxy=http://192.168.3.2:11088 apt-get update && \
+  http_proxy=http://192.168.3.2:11088 https_proxy=http://192.168.3.2:11088 apt-get install -y --no-install-recommends \
   pkg-config \
   curl \
   gnupg \
@@ -98,7 +98,7 @@ WORKDIR /app
 ENV POETRY_VERSION=1.8.3
 ENV POETRY_HOME=/etc/poetry
 ENV POETRY_VIRTUALENVS_CREATE=false
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN http_proxy=http://192.168.3.2:11088 https_proxy=http://192.168.3.2:11088 curl -sSL https://install.python-poetry.org | python3 -
 
 # Avoid crashes, including corrupted cache artifacts, when building multi-platform images with GitHub Actions.
 RUN /etc/poetry/bin/poetry cache clear pypi --all

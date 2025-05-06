@@ -2,6 +2,7 @@ import { isArray, isObject, isString, isFunction, startsWith, reduce, merge, map
 import resizeObserver from "@/services/resizeObserver";
 import { Plotly, prepareData, prepareLayout, updateData, updateAxes, updateChartSize } from "../plotly";
 import { formatSimpleTemplate } from "@/lib/value-format";
+import moment from "moment";
 
 const navigateToUrl = (url: string, shouldOpenNewTab: boolean = true) =>
   shouldOpenNewTab
@@ -119,8 +120,8 @@ export default function initChart(container: any, options: any, data: any, addit
           createSafeFunction((event: any) => {
             // 只要有x轴范围，统一转为ISO字符串传递
             if (event && (event["xaxis.range[0]"] !== undefined || event["xaxis.range[1]"] !== undefined)) {
-              const startISO = event["xaxis.range[0]"] ? new Date(event["xaxis.range[0]"].replace(' ', 'T') + 'Z').toISOString() : undefined;
-              const endISO = event["xaxis.range[1]"] ? new Date(event["xaxis.range[1]"].replace(' ', 'T') + 'Z').toISOString() : undefined;
+              const startISO = event["xaxis.range[0]"] ? moment(event["xaxis.range[0]"], "YYYY-MM-DD HH:mm:ss").toISOString() : undefined;
+              const endISO = event["xaxis.range[1]"] ? moment(event["xaxis.range[1]"], "YYYY-MM-DD HH:mm:ss").toISOString() : undefined;
               console.log("[Plotly] x轴范围:", startISO, endISO);
               if (typeof window.onXAxisRangeChange === 'function') {
                 window.onXAxisRangeChange(startISO, endISO);

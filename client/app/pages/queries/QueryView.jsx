@@ -57,7 +57,7 @@ function QueryView(props) {
 
   // 时间段和结束时间状态
   const [duration, setDuration] = useState("PT1H"); // 默认1小时
-  const [endTime, setEndTime] = useState(moment().utc()); // 默认当前时间
+  const [endTime, setEndTime] = useState(moment()); // 默认当前时间
 
   // -------------------- 查询执行相关 --------------------
   const {
@@ -106,7 +106,7 @@ function QueryView(props) {
   // -------------------- 参数与查询联动 --------------------
   function refreshParameters(durationValue, endValue) {
     // 每次刷新前，endTime 都取当前最新时间
-    const endMoment = moment().utc();
+    const endMoment = moment();
     let startMoment = endMoment.clone().subtract(moment.duration(durationValue));
     setEndTime(endMoment); // 同步更新state
     doExecuteQuery({ start: startMoment.toISOString(), end: endMoment.toISOString() }, true);
